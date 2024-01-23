@@ -1,6 +1,6 @@
 new_admission_types = ["emergency", "gp_referral", "hospital_referral", "self_referral", "elective"]
 sub_admission_types = [
-    "maternity", "mental", "injury_rtc", "urgent", "self_inflicted", "cancer",
+    "maternity", "mental", "injury_rtc", "self_inflicted", "cancer",
     "neurology", "cardiology", "orthopedics", "pediatrics", "gastroenterology",
     "pulmonology", "nephrology", "endocrinology", "dermatology", "oncology",
     "ophthalmology", "otorhinolaryngology_ENT", "geriatrics", "obstetrics", "infectious_diseases"
@@ -9,7 +9,6 @@ sub_admission_types = [
 admission_mapping = {
     "emergency": {
         "injury_rtc": {"inpatient", "day_patient"},
-        "urgent": {"inpatient", "outpatient"},
         "self_inflicted": {"inpatient"},
         "cardiology": {"inpatient", "day_patient"},
         "neurology": {"inpatient"},
@@ -56,7 +55,6 @@ admission_tests = {
     "maternity": ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis"],
     "mental": ["Psychological evaluation", "Blood tests", "Brain imaging (MRI, CT scans)", "Electroencephalogram (EEG)"],
     "injury_rtc": ["X-rays", "CT scans", "MRI", "Ultrasound", "Blood tests"],
-    "urgent": ["Varies by condition", "Blood tests", "X-rays", "ECG", "CT scans", "MRI"],
     "self_inflicted": ["Psychological assessment", "X-rays (for physical injuries)", "Blood tests", "Toxicology screening"],
     "cancer": ["Biopsy", "Blood tests", "MRI", "CT scans", "PET scans", "X-rays", "Ultrasound"],
     "neurology": ["MRI or CT scans of the brain", "Electroencephalogram (EEG)", "Lumbar puncture", "Nerve conduction studies", "Blood tests"],

@@ -1,6 +1,5 @@
 from pyspark.sql import SparkSession, DataFrame
 
-
 class CSVDataProcessor:
 
     def __init__(self, spark: SparkSession, file_path: str, sep: str = ','):
