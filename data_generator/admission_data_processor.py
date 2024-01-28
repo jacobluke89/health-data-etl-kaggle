@@ -1,11 +1,18 @@
 import random
 from datetime import datetime
-from typing import List, Tuple, Any
+from typing import Any, Tuple
 
 from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType, StructType, StructField
 
 from constants.admission_types_tests_dataset import admission_mapping, admission_tests
+
+
+class DataTypeCols:
+    ADMISSION = "ADMISSION_TYPE"
+    SUB_ADMISSION = "SUB_ADMISSION_TYPE"
+    STAY = "STAY_TYPE"
+    TESTS = "TESTS_SUGGESTED"
 
 
 class AdmissionProcessor:
@@ -83,13 +90,13 @@ class AdmissionProcessor:
 
 
 new_data_schema = StructType([
-    StructField("ADMISSION_TYPE", StringType(), False),
-    StructField("SUB_ADMISSION_TYPE", StringType(), False),
-    StructField("STAY_TYPE", StringType(), False),
-    StructField("TESTS_SUGGESTED", StringType(), False)
+    StructField(DataTypeCols.ADMISSION, StringType(), False),
+    StructField(DataTypeCols.SUB_ADMISSION, StringType(), False),
+    StructField(DataTypeCols.STAY, StringType(), False),
+    StructField(DataTypeCols.TESTS, StringType(), False)
 
 ])
 
 @udf(new_data_schema)
-def create_new_admission_data(gender: str, dob: str) -> tuple[str | Any, str, Any, Any]:
+def create_new_admission_data(gender: str, dob: str) -> Tuple[str | Any, str, Any, Any]:
     return AdmissionProcessor.create_new_admission_data(gender, dob)
