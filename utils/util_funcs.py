@@ -11,6 +11,7 @@ def get_row_count(df: DataFrame):
 
     """
     print(df.count())
+    return df.count()
 
 def display_df(spark_df: DataFrame):
     pandas_df = spark_df.toPandas()
