@@ -161,4 +161,4 @@ cython_debug/
 
 /temp_data/**
 
-./idea/**
+./idea/
