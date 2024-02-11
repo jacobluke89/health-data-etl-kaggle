@@ -65,10 +65,10 @@ admission_tests = {
     "nephrology": ["Blood tests (renal function tests)", "Urine tests", "Ultrasound of the kidneys", "Biopsy"],
     "endocrinology": ["Blood tests (hormone levels)", "Thyroid function tests", "Bone density tests"],
     "dermatology": ["Skin biopsy", "Patch tests", "Skin scrapings", "Blood tests"],
-    "oncology": ['Biopsies', 'MRI', 'Ultrasound', 'Blood tests', 'Imaging tests (CT, MRI, PET scans)', 'PET scans', 'X-rays', 'Biopsy', 'CT scans'],
+    "oncology": ["Biopsies", "MRI", "Ultrasound", "Blood tests", "Imaging CT", "Imaging MRI", "Imaging PET scans", "X-rays", "Biopsy", "CT scans"],
     "ophthalmology": ["Eye exam", "Tonometry (eye pressure test)", "Retinal imaging", "Visual field test"],
-    "otorhinolaryngology_ENT": ["Hearing tests", "Endoscopy of the ear/nose/throat", "Imaging tests (CT or MRI)"],
+    "otorhinolaryngology_ENT": ["Hearing tests", "Endoscopy of the ear/nose/throat", "Imaging CT", "Imaging MRI)"],
     "geriatrics": ["Comprehensive geriatric assessment", "Blood tests", "Bone density scans", "Cognitive tests"],
     "obstetrics": ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis", "Cervical screening"],
-    "infectious_diseases": ["Blood cultures", "PCR tests", "Antibody tests", "Imaging (e.g., chest X-ray for pneumonia)", "Lumbar puncture"]
+    "infectious_diseases": ["Blood cultures", "PCR tests", "Antibody tests", "chest X-ray", "Lumbar puncture"]
 }
