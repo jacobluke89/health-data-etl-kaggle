@@ -318,7 +318,6 @@ class Conditions(Enum):
     ]
 
 
-
 STAY_TYPES = "stay_types"
 CONDITIONS_CONST = "conditions"
 

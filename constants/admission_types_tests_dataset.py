@@ -1,3 +1,5 @@
+from pprint import pprint
+
 new_admission_types = ["emergency", "gp_referral", "hospital_referral", "self_referral", "elective"]
 sub_admission_types = [
     "maternity", "mental", "injury_rtc", "self_inflicted", "cancer",
@@ -302,16 +304,16 @@ conditions = {
         "Latex Allergy"
     ],
     "ophthalmology": [
-     "Refractive Errors",
-     "Cataracts",
-     "Glaucoma",
-     "Age-related Macular Degeneration (AMD)",
-     "Diabetic Retinopathy",
-     "Dry Eye Syndrome",
-     "Conjunctivitis",
-     "Retinal Detachment",
-     "Uveitis",
-     "Keratitis"
+        "Refractive Errors",
+        "Cataracts",
+        "Glaucoma",
+        "Age-related Macular Degeneration (AMD)",
+        "Diabetic Retinopathy",
+        "Dry Eye Syndrome",
+        "Conjunctivitis",
+        "Retinal Detachment",
+        "Uveitis",
+        "Keratitis"
     ],
     "maternity": [
         "Labour and Delivery",
@@ -485,7 +487,6 @@ admission_mapping = {
     }
 }
 
-
 stay_type = ["outpatient", "inpatient", "day_patient"]
 
 admission_tests = {
@@ -500,7 +501,8 @@ admission_tests = {
     "cardiology": ["ECG", "Echocardiogram", "Stress tests", "Cardiac catheterization", "Blood tests"],
     "orthopedics": ["X-rays", "MRI", "CT scans", "Bone scans", "Blood tests"],
     "pediatrics": ["Blood tests", "Urine tests", "X-rays", "Ultrasound", "MRI", "Developmental screening tests"],
-    "gastroenterology": ["Endoscopy", "Colonoscopy", "Blood tests", "Stool tests", "Abdominal ultrasound", "CT scan"],
+    "gastroenterology": ["Endoscopy", "Colonoscopy", "Blood tests", "Stool tests", "Abdominal ultrasound",
+                         "CT scan"],
     "pulmonology": ["Pulmonary function tests", "Chest X-ray", "CT scan", "Bronchoscopy"],
     "nephrology": ["Blood tests (renal function tests)", "Urine tests", "Ultrasound of the kidneys", "Biopsy"],
     "endocrinology": ["Blood tests (hormone levels)", "Thyroid function tests", "Bone density tests"],
@@ -511,5 +513,16 @@ admission_tests = {
     "otorhinolaryngology_ENT": ["Hearing tests", "Endoscopy of the ear/nose/throat", "Imaging CT", "Imaging MRI)"],
     "geriatrics": ["Comprehensive geriatric assessment", "Blood tests", "Bone density scans", "Cognitive tests"],
     "obstetrics": ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis", "Cervical screening"],
-    "infectious_diseases": ["Blood cultures", "PCR tests", "Antibody tests", "chest X-ray", "Lumbar puncture"]
+    "infectious_diseases": ["Blood cultures", "PCR tests", "Antibody tests", "chest X-ray", "Lumbar puncture"],
+    "hematology": ["Full Blood Count (FBC)", "Coagulation Profile", "Bone Marrow Biopsy",
+                            "Haemoglobin Electrophoresis", "Erythrocyte Sedimentation Rate (ESR)", "Serum Ferritin",
+                            "Blood Film", "Immunophenotyping", "Cytogenetic Testing", "Molecular Genetic Tests"],
+    "musculoskeletal": ["X-rays", "MRI Scan", "CT Scan", "Bone Scan",
+                                 "Dual-energy X-ray Absorptiometry (DEXA) Scan", "Electromyography (EMG)",
+                                 "Nerve Conduction Studies", "Ultrasound", "Arthroscopy",
+                                 "Blood Tests for Rheumatoid Factor & Anti-CCP"],
+    "urology": ["Urinalysis", "Blood Tests for Kidney Function", "Ultrasound of the Kidneys and Bladder",
+                         "Cystoscopy", "Urodynamic Testing", "Prostate-Specific Antigen (PSA) Test", "CT Urogram",
+                         "MRI of the Pelvis", "Intravenous Pyelogram (IVP)", "Renal Biopsy"]
 }
+
