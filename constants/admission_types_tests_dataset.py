@@ -6,53 +6,53 @@ sub_admission_types = [
     "ophthalmology", "otorhinolaryngology_ENT", "geriatrics", "obstetrics", "infectious_diseases"
 ]
 
-admission_mapping = {
-    "emergency": {
-        "injury_rtc": {"inpatient", "day_patient"},
-        "self_inflicted": {"inpatient"},
-        "cardiology": {
-            "stay_types": ["inpatient", "day_patient"],
-            "conditions": "cardiac"
-        },
-        "neurology": {"inpatient"},
-        "pulmonology": {"inpatient", "day_patient"},
-        "infectious_diseases": {"inpatient", "outpatient"}
-    },
-    "gp_referral": {
-        "mental": {"outpatient", "inpatient"},
-        "orthopedics": {"day_patient", "inpatient"},
-        "gastroenterology": {"outpatient", "day_patient"},
-        "endocrinology": {"outpatient"},
-        "dermatology": {"outpatient"},
-        "geriatrics": {"inpatient", "outpatient"}
-    },
-    "hospital_referral": {
-        "nephrology": {"inpatient"},
-        "cardiology": {"inpatient", "day_patient"},
-        "neurology": {"inpatient"},
-        "oncology": {"inpatient", "day_patient"},
-        "otorhinolaryngology_ENT": {"inpatient", "day_patient"}
-    },
-    "self_referral": {
-        "mental": {"outpatient"},
-        "dermatology": {"outpatient"},
-        "orthopedics": {"day_patient"},
-        "gastroenterology": {"outpatient"},
-        "endocrinology": {"outpatient"},
-        "oncology": {"inpatient", "day_patient", "outpatient"}
-    },
-    "elective": {
-        "maternity": {"inpatient", "day_patient"},
-        "orthopedics": {"inpatient", "day_patient"},
-        "obstetrics": {"inpatient"},
-        "ophthalmology": {"day_patient", "outpatient"},
-        "geriatrics": {"inpatient", "outpatient"}
-    }
-}
-
 conditions = {
+    "injury_rtc": [
+        "Whiplash",
+        "Concussions",
+        "Contusions (bruises)",
+        "Lacerations",
+        "Abrasions",
+        "Fractures",
+        "Sprains",
+        "Strains",
+        "Dislocations",
+        "Rib Fractures",
+        "Internal Bleeding",
+        "Pneumothorax (collapsed lung)",
+        "Spinal Cord Injuries",
+        "Traumatic Brain Injuries (TBIs)",
+        "Crush Injuries",
+        "Amputations",
+        "Psychological Trauma",
+        "Burn Injuries",
+        "Skull Fractures",
+        "Pelvic Fractures",
+        "Facial Fractures",
+        "Hematomas",
+        "Organ Damage",
+        "Cervical Spine Injuries",
+        "Thoracic Spine Injuries",
+        "Lumbar Spine Injuries",
+        "Tendon Injuries",
+        "Nerve Damage",
+        "Eye Injuries",
+        "Dental Injuries",
+        "Post-Traumatic Arthritis",
+        "Compartment Syndrome",
+        "Soft Tissue Injuries",
+        "Seat Belt Injuries",
+        "Airbag Injuries",
+        "Lower Extremity Injuries",
+        "Upper Extremity Injuries",
+        "Drowning or Near-Drowning Incidents",
+        "Hypothermia or Frostbite",
+        "Heatstroke",
+        "Acoustic Trauma",
+        "Stress Fractures",
+        "Bursitis"
+    ],
     "infectious_diseases": [
-        "Common Cold",
         "Influenza",
         "Urinary Tract Infections (UTIs)",
         "HIV/AIDS",
@@ -134,19 +134,31 @@ conditions = {
         "Autism Spectrum Disorder",
         "Insomnia"
     ],
-    "musculoskeletal": [
-        "Arthritis (Osteoarthritis, Rheumatoid Arthritis)",
+    "orthopedics": [
+        "Osteoarthritis",
+        "Rheumatoid Arthritis",
         "Osteoporosis",
+        "Fractures",
+        "Anterior Cruciate Ligament (ACL) Injuries",
+        "Meniscus Tears",
+        "Rotator Cuff Tears",
+        "Carpal Tunnel Syndrome",
+        "Spinal Disc Herniation",
+        "Scoliosis"
+    ],
+    "musculoskeletal": [
         "Low Back Pain",
         "Tendinitis",
+        "Bursitis",
         "Fibromyalgia",
-        "Carpal Tunnel Syndrome",
         "Gout",
+        "Ankylosing Spondylitis",
+        "Plantar Fasciitis",
+        "Repetitive Strain Injury (RSI)",
         "Lupus",
-        "Scoliosis",
-        "Fractures"
+        "Polymyalgia Rheumatica"
     ],
-    "skin_conditions": [
+    "dermatology": [
         "Acne",
         "Eczema",
         "Psoriasis",
@@ -240,10 +252,9 @@ conditions = {
         "Varicocele",
         "Infertility",
         "Orchitis",
-        "Peyronie's Disease"
+        "Peyronie''s Disease"
     ],
     "genetic_disorders": [
-        "Down Syndrome",
         "Cystic Fibrosis",
         "Sickle Cell Disease",
         "Hemophilia",
@@ -266,7 +277,7 @@ conditions = {
         "Celiac Disease",
         "Sjögren's Syndrome"
     ],
-    "oncological_conditions": [
+    "oncology": [
         "Breast Cancer",
         "Lung Cancer",
         "Prostate Cancer",
@@ -289,18 +300,203 @@ conditions = {
         "Immunodeficiency Disorders",
         "Contact Dermatitis",
         "Latex Allergy"
+    ],
+    "ophthalmology": [
+     "Refractive Errors",
+     "Cataracts",
+     "Glaucoma",
+     "Age-related Macular Degeneration (AMD)",
+     "Diabetic Retinopathy",
+     "Dry Eye Syndrome",
+     "Conjunctivitis",
+     "Retinal Detachment",
+     "Uveitis",
+     "Keratitis"
+    ],
+    "maternity": [
+        "Labour and Delivery",
+        "Scheduled Caesarean Section",
+        "Induction of Labour",
+        "Preterm Labour",
+        "Pre-eclampsia/Eclampsia",
+        "Gestational Diabetes Monitoring",
+        "Antepartum Haemorrhage",
+        "Pregnancy-induced Hypertension",
+        "Ruptured Membranes without Contractions",
+        "Postpartum Complications"
+    ],
+    "obstetrics": [
+        "Menstrual Disorders",
+        "Polycystic Ovary Syndrome (PCOS)",
+        "Premature Ovarian Insufficiency (POI)",
+        "Endometriosis",
+        "Congenital Reproductive Anomalies",
+        "Turner Syndrome",
+        "Gynecological Tumors",
+        "Breast Disorders",
+        "Vulvovaginitis",
+        "Precocious Puberty"
+    ],
+    "gastroenterology": [
+        "Gastro-oesophageal Reflux Disease (GORD)",
+        "Irritable Bowel Syndrome (IBS)",
+        "Inflammatory Bowel Disease (IBD) - including Crohn's Disease and Ulcerative Colitis",
+        "Coeliac Disease",
+        "Peptic Ulcers",
+        "Gallstones",
+        "Chronic Liver Disease - including Hepatitis and Cirrhosis",
+        "Pancreatitis",
+        "Gastroenteritis",
+        "Diverticular Disease"
+    ],
+    "endocrinology": [
+        "Diabetes Mellitus - Type 1 and Type 2",
+        "Thyroid Disorders - including Hypothyroidism and Hyperthyroidism",
+        "Addison's Disease",
+        "Cushing's Syndrome",
+        "Polycystic Ovary Syndrome (PCOS)",
+        "Osteoporosis",
+        "Pituitary Disorders",
+        "Hyperlipidaemia",
+        "Gout",
+        "Metabolic Syndrome"
     ]
 }
+
+admission_mapping = {
+    "emergency": {
+        "injury_rtc": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["injury_rtc"]
+        },
+        "self_inflicted": {"inpatient"},
+        "cardiology": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["cardiac"]
+        },
+        "neurology": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["neurological"]
+        },
+        "gastroenterology": {
+            "stay_types": ["inpatient", "day_patient", "outpatient"],
+            "conditions": conditions["gastroenterology"]
+        },
+        "respiratory": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["respiratory"]
+        },
+        "infectious_diseases": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["infectious_diseases"]
+        },
+        "maternity": {
+            "stay_types": ["inpatient", "day_patient", "outpatient"],
+            "conditions": conditions["maternity"]
+        },
+    },
+    "gp_referral": {
+        "psychiatric": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["psychiatric"]
+        },
+        "orthopedics": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["orthopedics"]
+        },
+        "gastroenterology": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["gastroenterology"]
+        },
+        "endocrinology": {
+            "stay_types": ["outpatient"],
+            "conditions": conditions["dermatology"]
+        },
+        "dermatology": {
+            "stay_types": ["outpatient"],
+            "conditions": conditions["dermatology"]
+        },
+        "maternity": {
+            "stay_types": ["inpatient", "day_patient", "outpatient"],
+            "conditions": conditions["maternity"]
+        },
+        "geriatrics": {"inpatient", "outpatient"}
+    },
+    "hospital_referral": {
+        "nephrology": {"inpatient"},
+        "cardiology": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["cardiac"]
+        },
+        "neurology": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["neurological"]
+        },
+        "oncology": {
+            "stay_types": ["inpatient", "day_patient", "outpatient"],
+            "conditions": conditions["oncology"]
+        },
+        "otorhinolaryngology_ENT": {
+            "stay_type": ["inpatient", "day_patient"],
+            "condition": conditions["ear_nose_throat"]
+        }
+    },
+    "self_referral": {
+        "psychiatric": {
+            "stay_types": ["outpatient"],
+            "conditions": conditions["psychiatric"]
+        },
+        "dermatology": {
+            "stay_types": ["outpatient"],
+            "conditions": conditions["dermatology"]
+        },
+        "orthopedics": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["orthopedics"]
+        },
+        "gastroenterology": {
+            "stay_types": ["outpatient"],
+            "conditions": conditions["gastroenterology"]
+        },
+        "endocrinology": {"outpatient"},
+        "oncology": {
+            "stay_types": ["inpatient", "day_patient", "outpatient"],
+            "conditions": conditions["oncology"]
+        },
+    },
+    "elective": {
+        "maternity": {
+            "stay_types": ["inpatient", "day_patient", "outpatient"],
+            "conditions": conditions["maternity"]
+        },
+        "orthopedics": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["orthopedics"]
+        },
+        "obstetrics": {
+            "stay_types": ["inpatient", "day_patient", "outpatient"],
+            "conditions": conditions["obstetrics"]
+        },
+        "ophthalmology": {
+            "stay_types": ["inpatient", "day_patient"],
+            "conditions": conditions["ophthalmology"]
+        },
+        "geriatrics": {"inpatient", "outpatient"}
+    }
+}
+
 
 stay_type = ["outpatient", "inpatient", "day_patient"]
 
 admission_tests = {
     "maternity": ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis"],
-    "mental": ["Psychological evaluation", "Blood tests", "Brain imaging (MRI, CT scans)", "Electroencephalogram (EEG)"],
+    "mental": ["Psychological evaluation", "Blood tests", "Brain imaging (MRI, CT scans)",
+               "Electroencephalogram (EEG)"],
     "injury_rtc": ["X-rays", "CT scans", "MRI", "Ultrasound", "Blood tests"],
-    "self_inflicted": ["Psychological assessment", "X-rays (for physical injuries)", "Blood tests", "Toxicology screening"],
-    "cancer": ["Biopsy", "Blood tests", "MRI", "CT scans", "PET scans", "X-rays", "Ultrasound"],
-    "neurology": ["MRI or CT scans of the brain", "Electroencephalogram (EEG)", "Lumbar puncture", "Nerve conduction studies", "Blood tests"],
+    "self_inflicted": ["Psychological assessment", "X-rays (for physical injuries)", "Blood tests",
+                       "Toxicology screening"],
+    "neurology": ["MRI or CT scans of the brain", "Electroencephalogram (EEG)", "Lumbar puncture",
+                  "Nerve conduction studies", "Blood tests"],
     "cardiology": ["ECG", "Echocardiogram", "Stress tests", "Cardiac catheterization", "Blood tests"],
     "orthopedics": ["X-rays", "MRI", "CT scans", "Bone scans", "Blood tests"],
     "pediatrics": ["Blood tests", "Urine tests", "X-rays", "Ultrasound", "MRI", "Developmental screening tests"],
@@ -309,7 +505,8 @@ admission_tests = {
     "nephrology": ["Blood tests (renal function tests)", "Urine tests", "Ultrasound of the kidneys", "Biopsy"],
     "endocrinology": ["Blood tests (hormone levels)", "Thyroid function tests", "Bone density tests"],
     "dermatology": ["Skin biopsy", "Patch tests", "Skin scrapings", "Blood tests"],
-    "oncology": ["Biopsies", "MRI", "Ultrasound", "Blood tests", "Imaging CT", "Imaging MRI", "Imaging PET scans", "X-rays", "Biopsy", "CT scans"],
+    "oncology": ["Biopsies", "MRI", "Ultrasound", "Blood tests", "Imaging CT", "Imaging MRI", "Imaging PET scans",
+                 "X-rays", "Biopsy", "CT scans"],
     "ophthalmology": ["Eye exam", "Tonometry (eye pressure test)", "Retinal imaging", "Visual field test"],
     "otorhinolaryngology_ENT": ["Hearing tests", "Endoscopy of the ear/nose/throat", "Imaging CT", "Imaging MRI)"],
     "geriatrics": ["Comprehensive geriatric assessment", "Blood tests", "Bone density scans", "Cognitive tests"],
