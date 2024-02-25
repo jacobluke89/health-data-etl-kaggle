@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+from utils.util_funcs import create_doctor_names
 
 class StayTypeCombinations(Enum):
     INPATIENT = ("Inpatient",)
@@ -89,7 +90,7 @@ class Conditions(Enum):
         "Acoustic Trauma",
         "Stress Fractures",
         "Bursitis"
-    ],
+    ]
     INFECTIOUS_DISEASES = [
         "Influenza",
         "Urinary Tract Infections (UTIs)",
@@ -100,7 +101,7 @@ class Conditions(Enum):
         "COVID-19",
         "Strep Throat",
         "Herpes Simplex Virus"
-    ],
+    ]
     CARDIAC = [
         "Hypertension (High Blood Pressure)",
         "Coronary Artery Disease",
@@ -111,7 +112,7 @@ class Conditions(Enum):
         "Stroke",
         "Aneurysms",
         "Venous Thromboembolism"
-    ],
+    ]
     RESPIRATORY = [
         "Asthma",
         "Chronic Obstructive Pulmonary Disease (COPD)",
@@ -123,7 +124,7 @@ class Conditions(Enum):
         "Lung Cancer",
         "Cystic Fibrosis",
         "Sleep Apnea"
-    ],
+    ]
     GASTROINTESTINAL_DISORDERS = [
         "Gastroesophageal Reflux Disease (GERD)",
         "Peptic Ulcer Disease",
@@ -135,8 +136,8 @@ class Conditions(Enum):
         "Cirrhosis",
         "Pancreatitis",
         "Celiac Disease"
-    ],
-    NEUROLOGY  = [
+    ]
+    NEUROLOGY = [
         "Migraines",
         "Epilepsy",
         "Parkinson's Disease",
@@ -147,7 +148,7 @@ class Conditions(Enum):
         "Bell's Palsy",
         "Sciatica",
         "Concussion"
-    ],
+    ]
     PSYCHIATRIC = [
         "Depression",
         "Anxiety Disorders",
@@ -159,7 +160,7 @@ class Conditions(Enum):
         "Attention Deficit Hyperactivity Disorder (ADHD)",
         "Autism Spectrum Disorder",
         "Insomnia"
-    ],
+    ]
     ORTHOPEDICS = [
         "Osteoarthritis",
         "Rheumatoid Arthritis",
@@ -171,7 +172,7 @@ class Conditions(Enum):
         "Carpal Tunnel Syndrome",
         "Spinal Disc Herniation",
         "Scoliosis"
-    ],
+    ]
     MUSCULOSKELETAL = [
         "Low Back Pain",
         "Tendinitis",
@@ -183,7 +184,7 @@ class Conditions(Enum):
         "Repetitive Strain Injury (RSI)",
         "Lupus",
         "Polymyalgia Rheumatica"
-    ],
+    ]
     DERMATOLOGY = [
         "Acne",
         "Eczema",
@@ -195,7 +196,7 @@ class Conditions(Enum):
         "Impetigo",
         "Cellulitis",
         "Shingles (Herpes Zoster)"
-    ],
+    ]
     HEMATOLOGIC = [
         "Anemia",
         "Hemophilia",
@@ -207,7 +208,7 @@ class Conditions(Enum):
         "Thrombocytopenia",
         "Hemochromatosis",
         "Polycythemia Vera"
-    ],
+    ]
     UROLOGICAL = [
         "Urinary Tract Infections (UTIs)",
         "Kidney Stones",
@@ -219,7 +220,7 @@ class Conditions(Enum):
         "Prostatitis",
         "Overactive Bladder",
         "Kidney Failure"
-    ],
+    ]
     OTORHINOLARYNGOLOGY_ENT = [
         "Otitis Media (Middle Ear Infection)",
         "Otitis Externa (Swimmer's Ear)",
@@ -231,7 +232,7 @@ class Conditions(Enum):
         "Hearing Loss",
         "Pharyngitis",
         "Rhinitis"
-    ],
+    ]
     ONCOLOGY = [
         "Breast Cancer",
         "Lung Cancer",
@@ -243,7 +244,7 @@ class Conditions(Enum):
         "Pancreatic Cancer",
         "Ovarian Cancer",
         "Bladder Cancer"
-    ],
+    ]
     OPHTHALMOLOGY = [
      "Refractive Errors",
      "Cataracts",
@@ -255,7 +256,7 @@ class Conditions(Enum):
      "Retinal Detachment",
      "Uveitis",
      "Keratitis"
-    ],
+    ]
     MATERNITY = [
         "Labour and Delivery",
         "Scheduled Caesarean Section",
@@ -267,7 +268,7 @@ class Conditions(Enum):
         "Pregnancy-induced Hypertension",
         "Ruptured Membranes without Contractions",
         "Postpartum Complications"
-    ],
+    ]
     OBSTETRICS = [
         "Menstrual Disorders",
         "Polycystic Ovary Syndrome (PCOS)",
@@ -279,7 +280,7 @@ class Conditions(Enum):
         "Breast Disorders",
         "Vulvovaginitis",
         "Precocious Puberty"
-    ],
+    ]
     GASTROENTEROLOGY = [
         "Gastro-oesophageal Reflux Disease (GORD)",
         "Irritable Bowel Syndrome (IBS)",
@@ -291,7 +292,7 @@ class Conditions(Enum):
         "Pancreatitis",
         "Gastroenteritis",
         "Diverticular Disease"
-    ],
+    ]
     ENDOCRINOLOGY = [
         "Diabetes Mellitus - Type 1 and Type 2",
         "Thyroid Disorders - including Hypothyroidism and Hyperthyroidism",
@@ -303,7 +304,7 @@ class Conditions(Enum):
         "Hyperlipidaemia",
         "Gout",
         "Metabolic Syndrome"
-    ],
+    ]
     NEPHROLOGY = [
         "Chronic Kidney Disease (CKD)",
         "Acute Kidney Injury (AKI)",
@@ -315,7 +316,32 @@ class Conditions(Enum):
         "Renal Artery Stenosis",
         "Haemodialysis-related Amyloidosis",
         "Hyperkalaemia"
-    ],
+    ]
+
+
+class ConditionTests(Enum):
+    MATERNITY = ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis"]
+    PSYCHIATRIC = ["Psychological evaluation", "Blood tests", "Brain imaging (MRI, CT scans)", "Electroencephalogram (EEG)"]
+    INJURY_RTC = ["X-rays", "CT scans", "MRI", "Ultrasound", "Blood tests"]
+    SELF_INFLICTED = ["Psychological assessment", "X-rays (for physical injuries)", "Blood tests", "Toxicology screening"]
+    NEUROLOGY = ["MRI or CT scans of the brain", "Electroencephalogram (EEG)", "Lumbar puncture", "Nerve conduction studies", "Blood tests"]
+    CARDIOLOGY = ["ECG", "Echocardiogram", "Stress tests", "Cardiac catheterization", "Blood tests"]
+    ORTHOPEDICS = ["X-rays", "MRI", "CT scans", "Bone scans", "Blood tests"]
+    PEDIATRICS = ["Blood tests", "Urine tests", "X-rays", "Ultrasound", "MRI", "Developmental screening tests"]
+    GASTROENTEROLOGY = ["Endoscopy", "Colonoscopy", "Blood tests", "Stool tests", "Abdominal ultrasound", "CT scan"]
+    RESPIRATORY = ["Pulmonary function tests", "Chest X-ray", "CT scan", "Bronchoscopy"]
+    NEPHROLOGY = ["Blood tests (renal function tests)", "Urine tests", "Ultrasound of the kidneys", "Biopsy"]
+    ENDOCRINOLOGY = ["Blood tests (hormone levels)", "Thyroid function tests", "Bone density tests"]
+    DERMATOLOGY = ["Skin biopsy", "Patch tests", "Skin scrapings", "Blood tests"]
+    ONCOLOGY = ["Biopsies", "MRI", "Ultrasound", "Blood tests", "Imaging CT", "Imaging MRI", "Imaging PET scans", "X-rays", "Biopsy", "CT scans"]
+    OPHTHALMOLOGY = ["Eye exam", "Tonometry (eye pressure test)", "Retinal imaging", "Visual field test"]
+    OTORHINOLARYNGOLOGY_ENT = ["Hearing tests", "Endoscopy of the ear/nose/throat", "Imaging CT", "Imaging MRI"]
+    GERIATRICS = ["Comprehensive geriatric assessment", "Blood tests", "Bone density scans", "Cognitive tests"]
+    OBSTETRICS = ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis", "Cervical screening"]
+    INFECTIOUS_DISEASES = ["Blood cultures", "PCR tests", "Antibody tests", "chest X-ray", "Lumbar puncture"]
+    HEMATOLOGY = ["Full Blood Count (FBC)", "Coagulation Profile", "Bone Marrow Biopsy", "Haemoglobin Electrophoresis", "Erythrocyte Sedimentation Rate (ESR)", "Serum Ferritin", "Blood Film", "Immunophenotyping", "Cytogenetic Testing", "Molecular Genetic Tests"]
+    MUSCULOSKELETAL = ["X-rays", "MRI Scan", "CT Scan", "Bone Scan", "Dual-energy X-ray Absorptiometry (DEXA) Scan", "Electromyography (EMG)", "Nerve Conduction Studies", "Ultrasound", "Arthroscopy", "Blood Tests for Rheumatoid Factor & Anti-CCP"]
+    UROLOGY = ["Urinalysis", "Blood Tests for Kidney Function", "Ultrasound of the Kidneys and Bladder", "Cystoscopy", "Urodynamic Testing", "Prostate-Specific Antigen (PSA) Test", "CT Urogram", "MRI of the Pelvis", "Intravenous Pyelogram (IVP)", "Renal Biopsy"]
 
 
 non_elective_conditions = ['Acute Hemorrhagic Stroke',
@@ -353,211 +379,81 @@ non_elective_conditions = ['Acute Hemorrhagic Stroke',
                            'Urinary Tract Infections (UTIs)'
                            ]
 
-class ConditionTests(Enum):
-    MATERNITY = ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis"]
-    PSYCHIATRIC = ["Psychological evaluation", "Blood tests", "Brain imaging (MRI, CT scans)", "Electroencephalogram (EEG)"]
-    INJURY_RTC = ["X-rays", "CT scans", "MRI", "Ultrasound", "Blood tests"]
-    SELF_INFLICTED = ["Psychological assessment", "X-rays (for physical injuries)", "Blood tests", "Toxicology screening"]
-    NEUROLOGY = ["MRI or CT scans of the brain", "Electroencephalogram (EEG)", "Lumbar puncture", "Nerve conduction studies", "Blood tests"]
-    CARDIOLOGY = ["ECG", "Echocardiogram", "Stress tests", "Cardiac catheterization", "Blood tests"]
-    ORTHOPEDICS = ["X-rays", "MRI", "CT scans", "Bone scans", "Blood tests"]
-    PEDIATRICS = ["Blood tests", "Urine tests", "X-rays", "Ultrasound", "MRI", "Developmental screening tests"]
-    GASTROENTEROLOGY = ["Endoscopy", "Colonoscopy", "Blood tests", "Stool tests", "Abdominal ultrasound", "CT scan"]
-    RESPIRATORY = ["Pulmonary function tests", "Chest X-ray", "CT scan", "Bronchoscopy"]
-    NEPHROLOGY = ["Blood tests (renal function tests)", "Urine tests", "Ultrasound of the kidneys", "Biopsy"]
-    ENDOCRINOLOGY = ["Blood tests (hormone levels)", "Thyroid function tests", "Bone density tests"]
-    DERMATOLOGY = ["Skin biopsy", "Patch tests", "Skin scrapings", "Blood tests"]
-    ONCOLOGY = ["Biopsies", "MRI", "Ultrasound", "Blood tests", "Imaging CT", "Imaging MRI", "Imaging PET scans", "X-rays", "Biopsy", "CT scans"]
-    OPHTHALMOLOGY = ["Eye exam", "Tonometry (eye pressure test)", "Retinal imaging", "Visual field test"]
-    OTORHINOLARYNGOLOGY_ENT = ["Hearing tests", "Endoscopy of the ear/nose/throat", "Imaging CT", "Imaging MRI"]
-    GERIATRICS = ["Comprehensive geriatric assessment", "Blood tests", "Bone density scans", "Cognitive tests"]
-    OBSTETRICS = ["Ultrasound", "Blood tests", "Glucose tolerance test", "Amniocentesis", "Cervical screening"]
-    INFECTIOUS_DISEASES = ["Blood cultures", "PCR tests", "Antibody tests", "chest X-ray", "Lumbar puncture"]
-    HEMATOLOGY = ["Full Blood Count (FBC)", "Coagulation Profile", "Bone Marrow Biopsy", "Haemoglobin Electrophoresis", "Erythrocyte Sedimentation Rate (ESR)", "Serum Ferritin", "Blood Film", "Immunophenotyping", "Cytogenetic Testing", "Molecular Genetic Tests"]
-    MUSCULOSKELETAL = ["X-rays", "MRI Scan", "CT Scan", "Bone Scan", "Dual-energy X-ray Absorptiometry (DEXA) Scan", "Electromyography (EMG)", "Nerve Conduction Studies", "Ultrasound", "Arthroscopy", "Blood Tests for Rheumatoid Factor & Anti-CCP"]
-    UROLOGY = ["Urinalysis", "Blood Tests for Kidney Function", "Ultrasound of the Kidneys and Bladder", "Cystoscopy", "Urodynamic Testing", "Prostate-Specific Antigen (PSA) Test", "CT Urogram", "MRI of the Pelvis", "Intravenous Pyelogram (IVP)", "Renal Biopsy"]
+def create_doctor_names_for_all_specialties():
+    doctor_names_by_specialty = {}
+    for subtype in SubAdmissionTypes:
+        doctor_names_by_specialty[subtype.name] = create_doctor_names()
+    return doctor_names_by_specialty
 
 
-STAY_TYPES = "stay_types"
-CONDITIONS_CONST = "conditions"
-CONDITION_TESTS = "tests"
+doctor_names_all_specialties = create_doctor_names_for_all_specialties()
+
+
+def base_structure(sub_admission_type, stay_type):
+    stay_types_dict = {
+        'all': StayTypeCombinations.ALL_TYPES.value,
+        'in': StayTypeCombinations.INPATIENT.value,
+        'out': StayTypeCombinations.OUTPATIENT.value,
+        'day': StayTypeCombinations.DAY_PATIENT.value,
+        'day_out': StayTypeCombinations.DAY_PATIENT_OUTPATIENT.value,
+        'day_in': StayTypeCombinations.INPATIENT_DAY_PATIENT.value,
+        'in_out': StayTypeCombinations.INPATIENT_OUTPATIENT.value
+    }
+
+    conditions = Conditions[sub_admission_type.name].value if sub_admission_type.name in Conditions.__members__ else ["No conditions"]
+    tests = ConditionTests[sub_admission_type.name].value if sub_admission_type.name in ConditionTests.__members__ else ["No tests"]
+
+    return {
+        'stay_types': stay_types_dict[stay_type],
+        'conditions': conditions,
+        'tests': tests,
+        'doctors': doctor_names_all_specialties[sub_admission_type.name]
+    }
+
 
 admission_mapping = {
     AdmissionTypes.EMERGENCY: {
-        SubAdmissionTypes.INJURY_RTC: {
-            STAY_TYPES: StayTypeCombinations.INPATIENT_DAY_PATIENT.value,
-            CONDITIONS_CONST: Conditions.INJURY_RTC.value,
-            CONDITION_TESTS: ConditionTests.INJURY_RTC.value
-        },
-        SubAdmissionTypes.SELF_INFLICTED: {
-            STAY_TYPES: StayTypeCombinations.INPATIENT.value,
-            CONDITION_TESTS: ConditionTests.SELF_INFLICTED.value
-        },
-        SubAdmissionTypes.CARDIOLOGY: {
-            STAY_TYPES: StayTypeCombinations.INPATIENT_DAY_PATIENT.value,
-            CONDITIONS_CONST: Conditions.CARDIAC.value,
-            CONDITION_TESTS: ConditionTests.CARDIOLOGY.value
-        },
-        SubAdmissionTypes.NEUROLOGY: {
-           STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-           CONDITIONS_CONST: Conditions.NEUROLOGY .value,
-           CONDITION_TESTS: ConditionTests.NEUROLOGY.value
-        },
-        SubAdmissionTypes.GASTROENTEROLOGY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.GASTROENTEROLOGY.value,
-            CONDITION_TESTS: ConditionTests.GASTROENTEROLOGY.value
-        },
-        SubAdmissionTypes.RESPIRATORY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.RESPIRATORY.value, 
-            CONDITION_TESTS: ConditionTests.RESPIRATORY.value
-        },
-        SubAdmissionTypes.INFECTIOUS_DISEASES: {
-            STAY_TYPES: StayTypeCombinations.INPATIENT_DAY_PATIENT.value,
-            CONDITIONS_CONST: Conditions.INFECTIOUS_DISEASES.value,
-            CONDITION_TESTS: ConditionTests.INFECTIOUS_DISEASES.value
-        },
-        SubAdmissionTypes.MATERNITY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.MATERNITY.value,
-            CONDITION_TESTS: ConditionTests.MATERNITY.value
-        },
-        SubAdmissionTypes.PSYCHIATRIC: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.PSYCHIATRIC.value,
-            CONDITION_TESTS: ConditionTests.PSYCHIATRIC.value,
-        },
-        SubAdmissionTypes.ORTHOPEDICS: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.ORTHOPEDICS.value,
-            CONDITION_TESTS: ConditionTests.ORTHOPEDICS.value
-        }
+        SubAdmissionTypes.INJURY_RTC: base_structure(SubAdmissionTypes.INJURY_RTC, 'day_in'),
+        SubAdmissionTypes.SELF_INFLICTED: base_structure(SubAdmissionTypes.SELF_INFLICTED, "in"),
+        SubAdmissionTypes.CARDIOLOGY: base_structure(SubAdmissionTypes.CARDIOLOGY, "day_in"),
+        SubAdmissionTypes.NEUROLOGY: base_structure(SubAdmissionTypes.NEUROLOGY, "all"),
+        SubAdmissionTypes.GASTROENTEROLOGY: base_structure(SubAdmissionTypes.GASTROENTEROLOGY, "all"),
+        SubAdmissionTypes.RESPIRATORY: base_structure(SubAdmissionTypes.RESPIRATORY, 'all'),
+        SubAdmissionTypes.INFECTIOUS_DISEASES: base_structure(SubAdmissionTypes.INFECTIOUS_DISEASES, "day_in"),
+        SubAdmissionTypes.MATERNITY: base_structure(SubAdmissionTypes.MATERNITY, 'all'),
+        SubAdmissionTypes.PSYCHIATRIC: base_structure(SubAdmissionTypes.PSYCHIATRIC, 'all'),
+        SubAdmissionTypes.ORTHOPEDICS: base_structure(SubAdmissionTypes.ORTHOPEDICS, 'all')
     },
     AdmissionTypes.GP_REFERRAL: {
-        SubAdmissionTypes.PSYCHIATRIC: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.PSYCHIATRIC.value,
-            CONDITION_TESTS: ConditionTests.PSYCHIATRIC.value
-        },
-        SubAdmissionTypes.ORTHOPEDICS: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.ORTHOPEDICS.value,
-            CONDITION_TESTS: ConditionTests.ORTHOPEDICS.value
-        },
-        SubAdmissionTypes.GASTROENTEROLOGY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.GASTROENTEROLOGY.value,
-            CONDITION_TESTS: ConditionTests.GASTROENTEROLOGY.value
-        },
-        SubAdmissionTypes.ENDOCRINOLOGY: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.ENDOCRINOLOGY.value,
-            CONDITION_TESTS: ConditionTests.ENDOCRINOLOGY.value
-        },
-        SubAdmissionTypes.DERMATOLOGY: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.DERMATOLOGY.value,
-            CONDITION_TESTS: ConditionTests.DERMATOLOGY.value
-        },
-        SubAdmissionTypes.MATERNITY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.MATERNITY.value,
-            CONDITION_TESTS: ConditionTests.MATERNITY.value
-        },
-        SubAdmissionTypes.GERIATRICS: {
-            STAY_TYPES: StayTypeCombinations.INPATIENT_OUTPATIENT.value
-        }
+        SubAdmissionTypes.PSYCHIATRIC: base_structure(SubAdmissionTypes.PSYCHIATRIC, 'all'),
+        SubAdmissionTypes.ORTHOPEDICS: base_structure(SubAdmissionTypes.ORTHOPEDICS, 'out'),
+        SubAdmissionTypes.GASTROENTEROLOGY: base_structure(SubAdmissionTypes.GASTROENTEROLOGY, 'all'),
+        SubAdmissionTypes.ENDOCRINOLOGY: base_structure(SubAdmissionTypes.ENDOCRINOLOGY, 'out'),
+        SubAdmissionTypes.DERMATOLOGY: base_structure(SubAdmissionTypes.DERMATOLOGY, 'out'),
+        SubAdmissionTypes.MATERNITY: base_structure(SubAdmissionTypes.MATERNITY, 'all'),
+        SubAdmissionTypes.GERIATRICS: base_structure(SubAdmissionTypes.GERIATRICS, 'in_out'),
     },
     AdmissionTypes.HOSPITAL_REFERRAL: {
-        SubAdmissionTypes.CARDIOLOGY: {
-            STAY_TYPES: StayTypeCombinations.INPATIENT_DAY_PATIENT.value,
-            CONDITIONS_CONST: Conditions.CARDIAC.value,
-            CONDITION_TESTS: ConditionTests.CARDIOLOGY.value
-        },
-        SubAdmissionTypes.NEPHROLOGY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value, 
-            CONDITIONS_CONST: Conditions.NEPHROLOGY.value,
-            CONDITION_TESTS: ConditionTests.NEPHROLOGY.value
-        },
-        SubAdmissionTypes.NEUROLOGY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.NEUROLOGY.value,
-            CONDITION_TESTS: ConditionTests.NEUROLOGY.value
-        },
-        SubAdmissionTypes.ONCOLOGY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.ONCOLOGY.value,
-            CONDITION_TESTS: ConditionTests.ONCOLOGY.value
-        },
-        SubAdmissionTypes.HEMATOLOGY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.HEMATOLOGIC.value,
-            CONDITION_TESTS: ConditionTests.HEMATOLOGY.value
-        },
-        SubAdmissionTypes.UROLOGY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.UROLOGICAL.value,
-            CONDITION_TESTS: ConditionTests.UROLOGY.value
-        },
-        SubAdmissionTypes.GASTROINTESTINAL_DISORDERS: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.GASTROINTESTINAL_DISORDERS.value,
-            CONDITION_TESTS: ConditionTests.GASTROENTEROLOGY.value
-        },
-        SubAdmissionTypes.RESPIRATORY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.RESPIRATORY.value,
-            CONDITION_TESTS: ConditionTests.RESPIRATORY.value
-        },
-        SubAdmissionTypes.MUSCULOSKELETAL: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.MUSCULOSKELETAL.value,
-            CONDITION_TESTS: ConditionTests.MUSCULOSKELETAL.value
-        },
-        SubAdmissionTypes.OTORHINOLARYNGOLOGY_ENT: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.OTORHINOLARYNGOLOGY_ENT.value,
-            CONDITION_TESTS: ConditionTests.OTORHINOLARYNGOLOGY_ENT.value
-        }
+        SubAdmissionTypes.CARDIOLOGY: base_structure(SubAdmissionTypes.CARDIOLOGY, "day_in"),
+        SubAdmissionTypes.NEPHROLOGY: base_structure(SubAdmissionTypes.NEPHROLOGY, "all"),
+        SubAdmissionTypes.NEUROLOGY: base_structure(SubAdmissionTypes.NEUROLOGY, "all"),
+        SubAdmissionTypes.ONCOLOGY: base_structure(SubAdmissionTypes.ONCOLOGY, "all"),
+        SubAdmissionTypes.HEMATOLOGY: base_structure(SubAdmissionTypes.HEMATOLOGY, "all"),
+        SubAdmissionTypes.UROLOGY: base_structure(SubAdmissionTypes.UROLOGY, "all"),
+        SubAdmissionTypes.GASTROINTESTINAL_DISORDERS: base_structure(SubAdmissionTypes.GASTROINTESTINAL_DISORDERS, "all"),
+        SubAdmissionTypes.RESPIRATORY: base_structure(SubAdmissionTypes.RESPIRATORY, 'all'),
+        SubAdmissionTypes.MUSCULOSKELETAL: base_structure(SubAdmissionTypes.MUSCULOSKELETAL, 'all'),
+        SubAdmissionTypes.OTORHINOLARYNGOLOGY_ENT: base_structure(SubAdmissionTypes.OTORHINOLARYNGOLOGY_ENT, 'all'),
     },
     AdmissionTypes.SELF_REFERRAL: {
-        SubAdmissionTypes.PSYCHIATRIC: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.PSYCHIATRIC.value,
-            CONDITION_TESTS: ConditionTests.PSYCHIATRIC.value
-        },
-        SubAdmissionTypes.DERMATOLOGY: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.DERMATOLOGY.value,
-            CONDITION_TESTS: ConditionTests.DERMATOLOGY.value
-        },
-        SubAdmissionTypes.ORTHOPEDICS: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.ORTHOPEDICS.value,
-            CONDITION_TESTS: ConditionTests.ORTHOPEDICS.value
-        },
-        SubAdmissionTypes.GASTROENTEROLOGY: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.GASTROENTEROLOGY.value,
-            CONDITION_TESTS: ConditionTests.GASTROENTEROLOGY.value
-        },
-        SubAdmissionTypes.OPHTHALMOLOGY: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.OPHTHALMOLOGY.value,
-            CONDITION_TESTS: ConditionTests.OPHTHALMOLOGY.value
-        },
-        SubAdmissionTypes.ENDOCRINOLOGY: {
-            STAY_TYPES: StayTypeCombinations.OUTPATIENT.value,
-            CONDITIONS_CONST: Conditions.ENDOCRINOLOGY.value,
-            CONDITION_TESTS: ConditionTests.ENDOCRINOLOGY.value
-        },
+        SubAdmissionTypes.PSYCHIATRIC: base_structure(SubAdmissionTypes.PSYCHIATRIC, 'out'),
+        SubAdmissionTypes.DERMATOLOGY: base_structure(SubAdmissionTypes.DERMATOLOGY, 'out'),
+        SubAdmissionTypes.ORTHOPEDICS: base_structure(SubAdmissionTypes.ORTHOPEDICS, 'out'),
+        SubAdmissionTypes.GASTROENTEROLOGY: base_structure(SubAdmissionTypes.GASTROENTEROLOGY, 'out'),
+        SubAdmissionTypes.OPHTHALMOLOGY: base_structure(SubAdmissionTypes.OPHTHALMOLOGY, 'out'),
+        SubAdmissionTypes.ENDOCRINOLOGY: base_structure(SubAdmissionTypes.ENDOCRINOLOGY, 'out'),
     },
     AdmissionTypes.ELECTIVE: {
-        SubAdmissionTypes.MATERNITY: {
-            STAY_TYPES: StayTypeCombinations.ALL_TYPES.value,
-            CONDITIONS_CONST: Conditions.MATERNITY.value,
-            CONDITION_TESTS: ConditionTests.MATERNITY.value
-        },
+        SubAdmissionTypes.MATERNITY: base_structure(SubAdmissionTypes.MATERNITY, 'all'),
     }
 }
