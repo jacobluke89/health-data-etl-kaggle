@@ -1,9 +1,13 @@
+import random
 from typing import List, Union
 
 from IPython.core.display_functions import display
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, count
 from faker import Faker
+
+from constants.condition_probabilities import condition_age_probability_dict
+
 
 def get_row_count(df: DataFrame, verbose=False):
     """
@@ -79,3 +83,35 @@ def create_doctor_names():
     fake = Faker()
     return [f"Dr. {fake.first_name()} {fake.last_name()}" for _ in range(50)]
 
+"""
+udf function 
+
+takes age column sub_level_admission and list of conditions 
+
+choose a condition from the list of conditions 
+
+check if given age they can have that condition 
+
+While True:
+    if they can then given their age they should increase 
+    / decrease the probability of that condition
+    
+    else they should be reassigned another sub_level_admission 
+    
+    once valid sub_level_admission exit while loop 
+    
+return the condition column
+
+
+"""
+
+def choose_condition(age, sub_level_admission, conditions_list):
+    while True:
+        chosen_condition = random.choice(conditions_list)
+        age_prob_list = condition_age_probability_dict[sub_level_admission][chosen_condition]
+
+        for (age_min, age_max), prob in age_prob_list:
+            if age_min <= age <= age_max:
+                if random.random() < prob:
+                    return chosen_condition
+                break  # Exit the for-loop if age is within a boundary but condition is not chosen
