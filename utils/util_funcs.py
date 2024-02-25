@@ -3,7 +3,7 @@ from typing import List, Union
 from IPython.core.display_functions import display
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, count
-
+from faker import Faker
 
 def get_row_count(df: DataFrame, verbose=False):
     """
@@ -73,3 +73,9 @@ def verify_ranking_counts(_df: DataFrame, ranked_df: DataFrame, names: list, uni
 
         # Assert that the counts are equal for each name-unique_id pair
         assert df_filtered_count == ranked_df_filtered_count, f"The number of matching rows for {name} with unique ID {unique_id} should be the same in both DataFrames."
+
+
+def create_doctor_names():
+    fake = Faker()
+    return [f"Dr. {fake.first_name()} {fake.last_name()}" for _ in range(50)]
+
