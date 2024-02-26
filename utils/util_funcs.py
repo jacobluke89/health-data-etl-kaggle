@@ -127,15 +127,15 @@ def choose_condition(age, sub_level_admission, conditions_list):
 # example age range weights
 age_ranges_weights = [
     ((0, 10), 0),
-    ((11, 17), 0.004),
-    ((18, 25), 0.005),
-    ((25, 34), 0.025),
-    ((35, 44), 0.25),
-    ((45, 59), 0.5),
-    ((45, 54), 2),
-    ((55, 64), 3),
-    ((65, 75), 4),
-    ((76, 80), 7)
+    ((11, 17), 0.08),
+    ((18, 25), 0.09),
+    ((25, 34), 1),
+    ((35, 44), 1.15),
+    ((45, 59), 1.19),
+    ((45, 54), 7),
+    ((55, 64), 10),
+    ((65, 75), 14),
+    ((76, 80), 30)
 ]
 
 
@@ -158,4 +158,4 @@ def calculate_weighted_probabilities(target_average: float = 0.125,
 
 
 if __name__ == '__main__':
-    pprint(calculate_weighted_probabilities())
+    pprint(calculate_weighted_probabilities(0.00037))
