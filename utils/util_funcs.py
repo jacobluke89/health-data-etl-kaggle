@@ -1,5 +1,6 @@
 import random
-from typing import List, Union
+from pprint import pprint
+from typing import List, Union, Tuple
 
 from IPython.core.display_functions import display
 from pyspark.sql import DataFrame
@@ -21,17 +22,20 @@ def get_row_count(df: DataFrame, verbose=False):
         print(df.count())
     return df.count()
 
-def display_df(spark_df: DataFrame,  num_rows: int = 20, select_rows: List = None):
+
+def display_df(spark_df: DataFrame, num_rows: int = 20, select_rows: List = None):
     if select_rows:
         spark_df = spark_df.select(select_rows)
     pandas_df = spark_df.toPandas()
     display(pandas_df.head(num_rows))
 
+
 def get_column_names(df: DataFrame):
     column_names = df.columns
     print(column_names)
 
-def remove_data(df_driver: DataFrame, df_anti: DataFrame, condition_1: Union[bool, col], condition_2: Union[bool,col]):
+
+def remove_data(df_driver: DataFrame, df_anti: DataFrame, condition_1: Union[bool, col], condition_2: Union[bool, col]):
     result_df = df_driver.join(df_anti,
                                on=['sub_level_admission', 'DOB'],
                                how='left_anti')
@@ -60,6 +64,7 @@ def verify_ranking(_df: DataFrame, ranked_df: DataFrame):
     # Assert that there are no mismatches
     assert mismatch_count == 0, f"There are names with mismatched unique ID counts. mismatch_count: {mismatch_count}"
 
+
 def verify_ranking_counts(_df: DataFrame, ranked_df: DataFrame, names: list, unique_ids: list):
     for name, unique_id in zip(names, unique_ids):
         # Define filter conditions
@@ -83,6 +88,7 @@ def create_doctor_names():
     fake = Faker()
     return [f"Dr. {fake.first_name()} {fake.last_name()}" for _ in range(50)]
 
+
 """
 udf function 
 
@@ -105,6 +111,7 @@ return the condition column
 
 """
 
+
 def choose_condition(age, sub_level_admission, conditions_list):
     while True:
         chosen_condition = random.choice(conditions_list)
@@ -115,3 +122,40 @@ def choose_condition(age, sub_level_admission, conditions_list):
                 if random.random() < prob:
                     return chosen_condition
                 break  # Exit the for-loop if age is within a boundary but condition is not chosen
+
+
+# example age range weights
+age_ranges_weights = [
+    ((0, 10), 0),
+    ((11, 17), 0.004),
+    ((18, 25), 0.005),
+    ((25, 34), 0.025),
+    ((35, 44), 0.25),
+    ((45, 59), 0.5),
+    ((45, 54), 2),
+    ((55, 64), 3),
+    ((65, 75), 4),
+    ((76, 80), 7)
+]
+
+
+def calculate_weighted_probabilities(target_average: float = 0.125,
+                                     age_ranges: List[Tuple[Tuple[int, int], int]] = None) -> List[Tuple[Tuple[int, int], int]]:
+    if age_ranges is None:
+        age_ranges = age_ranges_weights
+    total_weight = sum(age_range[1] for age_range in age_ranges)
+
+    total_probability = target_average * len(age_ranges)
+
+    weighted_probabilities = []
+
+    for age_range, weight in age_ranges:
+        # Calculate each age range's share of the total probability
+        probability = round((weight / total_weight) * total_probability, 5)
+        weighted_probabilities.append((age_range, probability))
+
+    return weighted_probabilities
+
+
+if __name__ == '__main__':
+    pprint(calculate_weighted_probabilities())
