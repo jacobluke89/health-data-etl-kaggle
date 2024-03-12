@@ -1,5 +1,9 @@
 from utils.util_funcs import create_doctor_names
-from type_constants import SubAdmissionTypes, StayTypeCombinations, ConditionsOrDiagnosis, ConditionTests, AdmissionTypes
+from .type_constants import (SubAdmissionTypes,
+                             StayTypeCombinations,
+                             ConditionsOrDiagnosis,
+                             ConditionTests,
+                             AdmissionTypes)
 
 def create_doctor_names_for_all_specialties():
     doctor_names_by_specialty = {}
@@ -54,6 +58,7 @@ admission_mapping = {
         SubAdmissionTypes.DERMATOLOGY: base_structure(SubAdmissionTypes.DERMATOLOGY, 'out'),
         SubAdmissionTypes.MATERNITY: base_structure(SubAdmissionTypes.MATERNITY, 'all'),
         SubAdmissionTypes.GERIATRICS: base_structure(SubAdmissionTypes.GERIATRICS, 'in_out'),
+        SubAdmissionTypes.CANCER: base_structure(SubAdmissionTypes.CANCER, 'all')
     },
     AdmissionTypes.HOSPITAL_REFERRAL: {
         SubAdmissionTypes.CARDIOLOGY: base_structure(SubAdmissionTypes.CARDIOLOGY, "day_in"),
@@ -66,6 +71,7 @@ admission_mapping = {
         SubAdmissionTypes.RESPIRATORY: base_structure(SubAdmissionTypes.RESPIRATORY, 'all'),
         SubAdmissionTypes.MUSCULOSKELETAL: base_structure(SubAdmissionTypes.MUSCULOSKELETAL, 'all'),
         SubAdmissionTypes.OTORHINOLARYNGOLOGY_ENT: base_structure(SubAdmissionTypes.OTORHINOLARYNGOLOGY_ENT, 'all'),
+        SubAdmissionTypes.CANCER: base_structure(SubAdmissionTypes.CANCER, 'all')
     },
     AdmissionTypes.SELF_REFERRAL: {
         SubAdmissionTypes.PSYCHIATRIC: base_structure(SubAdmissionTypes.PSYCHIATRIC, 'out'),

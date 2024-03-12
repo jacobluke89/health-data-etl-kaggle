@@ -112,30 +112,31 @@ return the condition column
 """
 
 
-def choose_condition(age, sub_level_admission, conditions_list):
-    while True:
-        chosen_condition = random.choice(conditions_list)
-        age_prob_list = condition_age_probability_dict[sub_level_admission][chosen_condition]
+# def choose_condition(age, sub_level_admission, conditions_list):
+#     while True:
+#         chosen_condition = random.choice(conditions_list)
+#         age_prob_list = condition_age_probability_dict[sub_level_admission][chosen_condition]
+#
+#         for (age_min, age_max), prob in age_prob_list:
+#             if age_min <= age <= age_max:
+#                 if random.random() < prob:
+#                     return chosen_condition
+#                 break  # Exit the for-loop if age is within a boundary but condition is not chosen
+#
 
-        for (age_min, age_max), prob in age_prob_list:
-            if age_min <= age <= age_max:
-                if random.random() < prob:
-                    return chosen_condition
-                break  # Exit the for-loop if age is within a boundary but condition is not chosen
 
-
-# example age range weights
+    # example age range weights
 age_ranges_weights = [
-    ((0, 10), 0),
-    ((11, 17), 0.08),
-    ((18, 25), 0.09),
+    ((0, 10), 0.1),
+    ((11, 17), 0.3),
+    ((18, 25), 0.5),
     ((25, 34), 1),
-    ((35, 44), 1.15),
-    ((45, 59), 1.19),
-    ((45, 54), 7),
-    ((55, 64), 10),
-    ((65, 75), 14),
-    ((76, 80), 30)
+    ((35, 44), 2),
+    ((45, 59), 2.7),
+    ((45, 54), 2.8),
+    ((55, 64), 3.15),
+    ((65, 75), 3.4),
+    ((76, 80), 3.7)
 ]
 
 
@@ -158,4 +159,4 @@ def calculate_weighted_probabilities(target_average: float = 0.125,
 
 
 if __name__ == '__main__':
-    pprint(calculate_weighted_probabilities(0.00037))
+    pprint(calculate_weighted_probabilities(0.45))
