@@ -1,4 +1,6 @@
-from .type_constants import SubAdmissionTypes
+from typing import List, Tuple, Dict
+
+from type_constants import SubAdmissionTypes
 
 condition_age_probability_dict = {
 
@@ -268,7 +270,26 @@ condition_age_probability_dict = {
                                    ((76, 80), 0.00364)]  # AVG 0.002
     },
     SubAdmissionTypes.DERMATOLOGY.name: {
-        "Acne": [],
+        "Acne": {"male": [((0, 10), 0.0),
+                   ((11, 17), 0.09998),
+                   ((18, 25), 0.07142),
+                   ((25, 34), 0.02857),
+                   ((35, 44), 3e-05),
+                   ((45, 59), 0.0),
+                   ((45, 54), 0.0),
+                   ((55, 64), 0.0),
+                   ((65, 75), 0.0),
+                   ((76, 80), 0.0)],  # 0.02 male
+                 "female": [((0, 10), 0.0),
+                   ((11, 17), 0.09132),
+                   ((18, 25), 0.06523),
+                   ((25, 34), 0.02609),
+                   ((35, 44), 0.00027),
+                   ((45, 59), 0.00652),
+                   ((45, 54), 0.01044),
+                   ((55, 64), 0.00013),
+                   ((65, 75), 0.0),
+                   ((76, 80), 0.0)]},  # 0.02 female
         "Cellulitis": [],
         "Dermatitis": [],
         "Eczema": [],
@@ -514,15 +535,267 @@ condition_age_probability_dict = {
         "Skin picking (Dermatillomania)": []}
 }
 
-#
-# if __name__ == "__main__":
-#     conditions_age_probability = {}
-#     for sub, cd in zip(SubAdmissionTypes, ConditionsOrDiagnosis):
-#         conditions_dict = {
-#
-#         }
-#         for condition in cd.value:
-#             conditions_dict[condition] = []
-#
-#         conditions_age_probability[f"SubAdmissionTypes.{sub}.name"] = conditions_dict
-#     pprint(conditions_age_probability)
+if __name__ == "__main__":
+    import numpy as np
+
+
+    def find_probability_for_age(age: int, condition_probabilities: List[Tuple[Tuple[int, int], int]]) -> int:
+        """
+        This function returns probability based on age and a given condition probability list.
+        Args:
+            age: The age we will be comparing to
+            condition_probabilities: The list of conditional probabilities
+
+        Returns:
+            int: the probability, if 0 returns, edge case, should be investigated.
+
+        """
+        for (age_min, age_max), prob in condition_probabilities:
+            if age_min <= age <= age_max:
+                return prob
+        return 0
+
+
+    def choose_condition_for_patient(age: int, pt_gender: str,
+                                     probability_dict) -> str | None:
+        """Dict[str: List[Tuple[Tuple[int, int], int]]]
+        This function chooses a condition for a patient based on the age and looking at the condition_age_probability_dict
+        Args:
+            age: The age of the individual we will be comparing to
+            probability_dict: The probability dict of conditions with age bandings and probabilities
+
+        Returns:
+            A condition or None if 0 probability
+        """
+        conditions_probabilities = []
+        # Prepare a list of conditions with their probability for the given age
+        for condition, age_prob in probability_dict.items():
+            if type(age_prob) is dict:
+                for gender, age_prob_specific, in age_prob.items():
+                    if pt_gender == gender:
+                        prob = find_probability_for_age(age, age_prob_specific)
+                        if prob > 0:  # Consider only conditions with a non-zero probability
+                            conditions_probabilities.append((condition, prob))
+            if type(age_prob) is list:
+                prob = find_probability_for_age(age, age_prob)
+                if prob > 0:  # Consider only conditions with a non-zero probability
+                    conditions_probabilities.append((condition, prob))
+
+        # If no condition is applicable based on age, return None or handle as appropriate
+        if not conditions_probabilities:
+            return None
+
+        # Sort the conditions by probability for easier handling (optional)
+        conditions_probabilities.sort(key=lambda x: x[1], reverse=True)
+
+        # Use cumulative probabilities to select a condition
+        total_prob = sum(prob for _, prob in conditions_probabilities)
+        random_prob = np.random.uniform(0, total_prob)
+        cumulative_prob = 0
+        for condition, prob in conditions_probabilities:
+            cumulative_prob += prob
+            if random_prob < cumulative_prob:
+                return condition
+
+        return None
+
+
+    # Example usage
+    patient_age = 16
+    # example dictionary
+    condition_age_probability_dict = {
+        "Bladder Cancer": [((0, 10), 0.0),
+                           ((11, 17), 0.00018),
+                           ((18, 25), 0.0002),
+                           ((25, 34), 0.00224),
+                           ((35, 44), 0.00448),
+                           ((45, 59), 0.00673),
+                           ((45, 54), 0.00897),
+                           ((55, 64), 0.02018),
+                           ((65, 75), 0.02242),
+                           ((76, 80), 0.0426)],  # AVG 0.00108
+        "Brain and Nervous System Cancers": [((0, 10), 0.00001),
+                                             ((11, 17), 0.00023),
+                                             ((18, 25), 0.00026),
+                                             ((25, 34), 0.00291),
+                                             ((35, 44), 0.00581),
+                                             ((45, 59), 0.00872),
+                                             ((45, 54), 0.01163),
+                                             ((55, 64), 0.02616),
+                                             ((65, 75), 0.02906),
+                                             ((76, 80), 0.05522)],  # AVG 0.014
+        "Breast Cancer": [((0, 10), 0.0),
+                          ((11, 17), 0.00228),
+                          ((18, 25), 0.00256),
+                          ((25, 34), 0.02847),
+                          ((35, 44), 0.05695),
+                          ((45, 59), 0.11389),
+                          ((45, 54), 0.11389),
+                          ((55, 64), 0.25625),
+                          ((65, 75), 0.28473),
+                          ((76, 80), 0.54098)],  # AVG 0.14
+        "Cervical Cancer": [((0, 10), 0.0),
+                            ((11, 17), 0.000001),
+                            ((18, 25), 0.000001),
+                            ((25, 34), 0.00005),
+                            ((35, 44), 0.00032),
+                            ((45, 59), 0.00064),
+                            ((45, 54), 0.00064),
+                            ((55, 64), 0.00143),
+                            ((65, 75), 0.00159),
+                            ((76, 80), 0.00303)],  # avg 0.000769
+        "Colorectal Cancer": [((0, 10), 0.0),
+                              ((11, 17), 0.00021),
+                              ((18, 25), 0.00021),
+                              ((25, 34), 0.00229),
+                              ((35, 44), 0.04572),
+                              ((45, 59), 0.09144),
+                              ((45, 54), 0.09144),
+                              ((55, 64), 0.20574),
+                              ((65, 75), 0.2286),
+                              ((76, 80), 0.43435)],  # avg 0.11
+        "Kidney (Renal) Cancer": [((0, 10), 0.0000005),
+                                  ((11, 17), 0.00033),
+                                  ((18, 25), 0.00333),
+                                  ((25, 34), 0.0037),
+                                  ((35, 44), 0.0074),
+                                  ((45, 59), 0.01479),
+                                  ((45, 54), 0.01849),
+                                  ((55, 64), 0.03329),
+                                  ((65, 75), 0.03698),
+                                  ((76, 80), 0.07027)],  # AVG 0.01886
+        "Leukemia": [((0, 10), 0.00017),
+                     ((11, 17), 0.0003),
+                     ((18, 25), 0.00301),
+                     ((25, 34), 0.00334),
+                     ((35, 44), 0.00668),
+                     ((45, 59), 0.01002),
+                     ((45, 54), 0.01336),
+                     ((55, 64), 0.02004),
+                     ((65, 75), 0.03341),
+                     ((76, 80), 0.06347)],  # avg 0.01538
+        "Liver Cancer": [((0, 10), 0.0),
+                         ((11, 17), 0.0),
+                         ((18, 25), 0.0000001),
+                         ((25, 34), 0.000005),
+                         ((35, 44), 0.0002),
+                         ((45, 59), 0.00068),
+                         ((45, 54), 0.0009),
+                         ((55, 64), 0.00135),
+                         ((65, 75), 0.00226),
+                         ((76, 80), 0.00429)],  # AVG 0.000971
+        "Lung Cancer": [((0, 10), 0.0),
+                        ((11, 17), 0.00000001),
+                        ((18, 25), 0.000001),
+                        ((25, 34), 0.000008),
+                        ((35, 44), 0.00609),
+                        ((45, 59), 0.01739),
+                        ((45, 54), 0.06086),
+                        ((55, 64), 0.08694),
+                        ((65, 75), 0.1478),
+                        ((76, 80), 0.26083)],  # AVG 0.588
+        "Melanoma of Skin": [((0, 10), 1e-05),
+                             ((11, 17), 3e-05),
+                             ((18, 25), 4e-05),
+                             ((25, 34), 0.0002),
+                             ((35, 44), 0.00563),
+                             ((45, 59), 0.04826),
+                             ((45, 54), 0.0563),
+                             ((55, 64), 0.07238),
+                             ((65, 75), 0.09651),
+                             ((76,), 0.12064)],  # AVG 0.04
+        "Non-Hodgkin Lymphoma": [((0, 10), 0.000001),
+                                 ((11, 17), 0.000005),
+                                 ((18, 25), 0.000003),
+                                 ((25, 34), 0.00015),
+                                 ((35, 44), 0.00429),
+                                 ((45, 59), 0.02449),
+                                 ((45, 54), 0.03062),
+                                 ((55, 64), 0.04286),
+                                 ((65, 75), 0.04899),
+                                 ((76,), 0.06124)],  # AVG 0.02127
+        "Ovarian Cancer": [((0, 10), 0.0),
+                           ((11, 17), 0.000001),
+                           ((18, 25), 0.000002),
+                           ((25, 34), 0.000008),
+                           ((35, 44), 0.00219),
+                           ((45, 59), 0.00313),
+                           ((45, 54), 0.00938),
+                           ((55, 64), 0.0219),
+                           ((65, 75), 0.02502),
+                           ((76,), 0.05317)],  # AVG 0.1149
+        "Pancreatic Cancer": [((0, 10), 0.0),
+                              ((11, 17), 0.000004),
+                              ((18, 25), 0.000005),
+                              ((25, 34), 0.00023),
+                              ((35, 44), 0.00631),
+                              ((45, 59), 0.00902),
+                              ((45, 54), 0.02706),
+                              ((55, 64), 0.02706),
+                              ((65, 75), 0.03608),
+                              ((76,), 0.06315)],  # AVG 0.0169
+        "Prostate Cancer": [((0, 10), 0.0),
+                            ((11, 17), 0.0003),
+                            ((18, 25), 0.00037),
+                            ((25, 34), 0.00186),
+                            ((35, 44), 0.01862),
+                            ((45, 59), 0.03724),
+                            ((45, 54), 0.14895),
+                            ((55, 64), 0.22343),
+                            ((65, 75), 0.2979),
+                            ((76,), 0.52133)],  # AVG 0.125
+        "Stomach (Gastric) Cancer": [((0, 10), 0.0),
+                                     ((11, 17), 0.000001),
+                                     ((18, 25), 0.000001),
+                                     ((25, 34), 0.00016),
+                                     ((35, 44), 0.0002),
+                                     ((45, 59), 0.00023),
+                                     ((45, 54), 0.00047),
+                                     ((55, 64), 0.0014),
+                                     ((65, 75), 0.00218),
+                                     ((76, 80), 0.00296)],  # AVG 0.0007634
+        "Testicular Cancer": [((0, 10), 0.0),
+                              ((11, 17), 0.000005),
+                              ((18, 25), 0.000005),
+                              ((25, 34), 0.000007),
+                              ((35, 44), 0.000008),
+                              ((45, 59), 0.000049),
+                              ((45, 54), 0.00049),
+                              ((55, 64), 0.0007),
+                              ((65, 75), 0.00099),
+                              ((76, 80), 0.00211)],  # AVG 0.0004545
+        "Thyroid Cancer": [((0, 10), 0.0),
+                           ((11, 17), 0.0),
+                           ((18, 25), 0.000001),
+                           ((25, 34), 0.000006),
+                           ((35, 44), 0.000007),
+                           ((45, 59), 0.000008),
+                           ((45, 54), 0.0004),
+                           ((55, 64), 0.00057),
+                           ((65, 75), 0.0008),
+                           ((76, 80), 0.00172)],  # AVG 0.00037
+        "Acne": {"male": [((0, 10), 0.0),
+                          ((11, 17), 0.09998),
+                          ((18, 25), 0.07142),
+                          ((25, 34), 0.02857),
+                          ((35, 44), 3e-05),
+                          ((45, 59), 0.0),
+                          ((45, 54), 0.0),
+                          ((55, 64), 0.0),
+                          ((65, 75), 0.0),
+                          ((76, 80), 0.0)],  # 0.02 male
+                 "female": [((0, 10), 0.0),
+                            ((11, 17), 0.09132),
+                            ((18, 25), 0.06523),
+                            ((25, 34), 0.02609),
+                            ((35, 44), 0.00027),
+                            ((45, 59), 0.00652),
+                            ((45, 54), 0.01044),
+                            ((55, 64), 0.00013),
+                            ((65, 75), 0.0),
+                            ((76, 80), 0.0)]},  # 0.02 female
+    }
+
+    # Choose a condition for a single patient
+    chosen_condition = choose_condition_for_patient(patient_age, "male", condition_age_probability_dict)
+    print(chosen_condition)
