@@ -127,16 +127,16 @@ return the condition column
 
     # example age range weights
 age_ranges_weights = [
-    ((0, 10), 0.00),
-    ((11, 17), 7),
-    ((18, 25), 5),
-    ((25, 34), 2),
-    ((35, 44), 0.021),
-    ((45, 59), 0.5),
-    ((45, 54), 0.8),
-    ((55, 64), 0.01),
-    ((65, 75), 0.00000),
-    ((76, 80), 0)
+    ((0, 10), .000),
+    ((11, 17), .00),
+    ((18, 25), .00001),
+    ((25, 34), .005),
+    ((35, 44), .09),
+    ((45, 59), 1.9),
+    ((45, 54), 3.9),
+    ((55, 64), 5.8),
+    ((65, 75), 6.1),
+    ((76, 80), 7.1)
 ]
 
 
@@ -159,4 +159,4 @@ def calculate_weighted_probabilities(target_average: float = 0.125,
 
 
 if __name__ == '__main__':
-    pprint(calculate_weighted_probabilities(0.02))
+    pprint(calculate_weighted_probabilities(0.31))

@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Union
 
 from type_constants import SubAdmissionTypes
 
@@ -271,45 +271,119 @@ condition_age_probability_dict = {
     },
     SubAdmissionTypes.DERMATOLOGY.name: {
         "Acne": {"male": [((0, 10), 0.0),
-                   ((11, 17), 0.09998),
-                   ((18, 25), 0.07142),
-                   ((25, 34), 0.02857),
-                   ((35, 44), 3e-05),
-                   ((45, 59), 0.0),
-                   ((45, 54), 0.0),
-                   ((55, 64), 0.0),
-                   ((65, 75), 0.0),
-                   ((76, 80), 0.0)],  # 0.02 male
+                          ((11, 17), 0.09998),
+                          ((18, 25), 0.07142),
+                          ((25, 34), 0.02857),
+                          ((35, 44), 3e-05),
+                          ((45, 59), 0.0),
+                          ((45, 54), 0.0),
+                          ((55, 64), 0.0),
+                          ((65, 75), 0.0),
+                          ((76, 80), 0.0)],  # 0.02 male
                  "female": [((0, 10), 0.0),
-                   ((11, 17), 0.09132),
-                   ((18, 25), 0.06523),
-                   ((25, 34), 0.02609),
-                   ((35, 44), 0.00027),
-                   ((45, 59), 0.00652),
-                   ((45, 54), 0.01044),
-                   ((55, 64), 0.00013),
-                   ((65, 75), 0.0),
-                   ((76, 80), 0.0)]},  # 0.02 female
-        "Cellulitis": [],
-        "Dermatitis": [],
-        "Eczema": [],
-        "Hives (Urticaria)": [],
-        "Impetigo": [],
-        "Psoriasis": [],
-        "Rosacea": [],
-        "Shingles (Herpes Zoster)": [],
-        "Skin Cancer": []},
+                            ((11, 17), 0.09132),
+                            ((18, 25), 0.06523),
+                            ((25, 34), 0.02609),
+                            ((35, 44), 0.00027),
+                            ((45, 59), 0.00652),
+                            ((45, 54), 0.01044),
+                            ((55, 64), 0.00013),
+                            ((65, 75), 0.0),
+                            ((76, 80), 0.0)]},  # 0.02 female
+        "Cellulitis": [((0, 10), 0.0),
+                       ((11, 17), 0.00042),
+                       ((18, 25), 0.0003),
+                       ((25, 34), 0.0012),
+                       ((35, 44), 0.00246),
+                       ((45, 59), 0.0042),
+                       ((45, 54), 0.0054),
+                       ((55, 64), 0.006),
+                       ((65, 75), 0.012),
+                       ((76, 80), 0.01801)],  # 0.05
+        "Dermatitis": [((0, 10), 0.08521),
+                       ((11, 17), 0.14912),
+                       ((18, 25), 0.17042),
+                       ((25, 34), 0.12781),
+                       ((35, 44), 0.06391),
+                       ((45, 59), 0.02982),
+                       ((45, 54), 0.03834),
+                       ((55, 64), 0.0213),
+                       ((65, 75), 0.00852),
+                       ((76, 80), 0.00554)],  # 0.07
+        "Eczema": [((0, 10), 0.22135),
+                   ((11, 17), 0.17708),
+                   ((18, 25), 0.16822),
+                   ((25, 34), 0.15937),
+                   ((35, 44), 0.0664),
+                   ((45, 59), 0.03099),
+                   ((45, 54), 0.03984),
+                   ((55, 64), 0.02213),
+                   ((65, 75), 0.00885),
+                   ((76, 80), 0.00576)],  # 0.09
+        "Hives (Urticaria)": [((0, 10), 0.43229),
+                              ((11, 17), 0.37486),
+                              ((18, 25), 0.18836),
+                              ((25, 34), 0.07411),
+                              ((35, 44), 0.0315),
+                              ((45, 59), 0.04323),
+                              ((45, 54), 0.05558),
+                              ((55, 64), 6e-05),
+                              ((65, 75), 1e-05),
+                              ((76, 80), 0.0)],  # 0.12
+        "Impetigo": [((0, 10), 0.85224),
+                     ((11, 17), 0.73901),
+                     ((18, 25), 0.37133),
+                     ((25, 34), 0.02435),
+                     ((35, 44), 0.00122),
+                     ((45, 59), 0.00085),
+                     ((45, 54), 0.01096),
+                     ((55, 64), 1e-05),
+                     ((65, 75), 2e-05),
+                     ((76, 80), 0.0)],  # 0.2
+        "Psoriasis": [((0, 10), 0.00012),
+                      ((11, 17), 0.00829),
+                      ((18, 25), 0.05332),
+                      ((25, 34), 0.06162),
+                      ((35, 44), 0.03567),
+                      ((45, 59), 0.01193),
+                      ((45, 54), 0.03436),
+                      ((55, 64), 0.05914),
+                      ((65, 75), 0.0237),
+                      ((76, 80), 0.01185)],  # 0.03
+        "Rosacea": [((0, 10), 5e-05),
+                    ((11, 17), 0.00033),
+                    ((18, 25), 0.06987),
+                    ((25, 34), 0.10247),
+                    ((35, 44), 0.27993),
+                    ((45, 59), 0.32637),
+                    ((45, 54), 0.13508),
+                    ((55, 64), 0.09274),
+                    ((65, 75), 0.04659),
+                    ((76, 80), 0.04658)],  # 0.11
+        "Shingles (Herpes Zoster)": [((0, 10), 0.0),
+                                     ((11, 17), 0.0),
+                                     ((18, 25), 0.0),
+                                     ((25, 34), 0.00062),
+                                     ((35, 44), 0.01121),
+                                     ((45, 59), 0.23659),
+                                     ((45, 54), 0.48564),
+                                     ((55, 64), 0.72223),
+                                     ((65, 75), 0.75959),
+                                     ((76, 80), 0.88411)],  # .31
+    },
     SubAdmissionTypes.ENDOCRINOLOGY.name: {
         "Addison's Disease": [],
         "Cushing's Syndrome": [],
-        "Diabetes Mellitus - Type 1 and Type 2": [],
+        "Diabetes - Type 1": [],
+        "Diabetes - Type 2": [],
         "Gout": [],
         "Hyperlipidaemia": [],
         "Metabolic Syndrome": [],
         "Osteoporosis": [],
         "Pituitary Disorders": [],
         "Polycystic Ovary Syndrome (PCOS)": [],
-        "Thyroid Disorders - including Hypothyroidism and Hyperthyroidism": []},
+        "Thyroid Disorders - including Hypothyroidism and Hyperthyroidism": []
+    },
     SubAdmissionTypes.GASTROENTEROLOGY.name: {
         "Chronic Liver Disease - including Hepatitis and Cirrhosis": [],
         "Coeliac Disease": [],
@@ -444,7 +518,8 @@ condition_age_probability_dict = {
         "Parkinson's Disease": [],
         "Peripheral Neuropathy": [],
         "Sciatica": [],
-        "Stroke": []},
+        "Stroke": []
+    },
     SubAdmissionTypes.OBSTETRICS.name: {
         "Breast Disorders": [],
         "Congenital Reproductive Anomalies": [],
@@ -455,7 +530,8 @@ condition_age_probability_dict = {
         "Precocious Puberty": [],
         "Premature Ovarian Insufficiency (POI)": [],
         "Turner Syndrome": [],
-        "Vulvovaginitis": []},
+        "Vulvovaginitis": []
+    },
     SubAdmissionTypes.ONCOLOGY.name: {
         "Bladder Cancer": [],
         "Breast Cancer": [],
@@ -466,7 +542,8 @@ condition_age_probability_dict = {
         "Melanoma": [],
         "Ovarian Cancer": [],
         "Pancreatic Cancer": [],
-        "Prostate Cancer": []},
+        "Prostate Cancer": []
+    },
     SubAdmissionTypes.OPHTHALMOLOGY.name: {
         "Age-related Macular Degeneration (AMD)": [],
         "Cataracts": [],
@@ -477,7 +554,8 @@ condition_age_probability_dict = {
         "Keratitis": [],
         "Refractive Errors": [],
         "Retinal Detachment": [],
-        "Uveitis": []},
+        "Uveitis": []
+    },
     SubAdmissionTypes.ORTHOPEDICS.name: {
         "Anterior Cruciate Ligament (ACL) Injuries": [],
         "Carpal Tunnel Syndrome": [],
@@ -488,7 +566,8 @@ condition_age_probability_dict = {
         "Rheumatoid Arthritis": [],
         "Rotator Cuff Tears": [],
         "Scoliosis": [],
-        "Spinal Disc Herniation": []},
+        "Spinal Disc Herniation": []
+    },
     SubAdmissionTypes.OTORHINOLARYNGOLOGY_ENT.name: {
         "Hearing Loss": [],
         "Laryngitis": [],
@@ -499,7 +578,8 @@ condition_age_probability_dict = {
         "Rhinitis": [],
         "Sinusitis": [],
         "Tinnitus": [],
-        "Tonsillitis": []},
+        "Tonsillitis": []
+    },
     SubAdmissionTypes.PSYCHIATRIC.name: {
         "Anxiety Disorders": [],
         "Attention Deficit Hyperactivity Disorder (ADHD)": [],
@@ -510,7 +590,8 @@ condition_age_probability_dict = {
         "Insomnia": [],
         "Obsessive-Compulsive Disorder (OCD)": [],
         "Post-Traumatic Stress Disorder (PTSD)": [],
-        "Schizophrenia": []},
+        "Schizophrenia": []
+    },
     SubAdmissionTypes.RESPIRATORY.name: {
         "Allergic Rhinitis": [],
         "Asthma": [],
@@ -521,7 +602,8 @@ condition_age_probability_dict = {
         "Pneumonia": [],
         "Pulmonary Embolism": [],
         "Sinusitis": [],
-        "Sleep Apnea": []},
+        "Sleep Apnea": []
+    },
     SubAdmissionTypes.SELF_INFLICTED.name: {
         "Bone breaking": [],
         "Burning": [],
@@ -539,7 +621,7 @@ if __name__ == "__main__":
     import numpy as np
 
 
-    def find_probability_for_age(age: int, condition_probabilities: List[Tuple[Tuple[int, int], int]]) -> int:
+    def find_probability_for_age(age: int, condition_probabilities: List[Tuple[Tuple[int, int], float]]) -> int:
         """
         This function returns probability based on age and a given condition probability list.
         Args:
@@ -557,10 +639,12 @@ if __name__ == "__main__":
 
 
     def choose_condition_for_patient(age: int, pt_gender: str,
-                                     probability_dict) -> str | None:
-        """Dict[str: List[Tuple[Tuple[int, int], int]]]
+                                     probability_dict: Dict[str, List[Tuple[Tuple[int, int], float]] |
+                                                       Dict[str, List[Tuple[Tuple[int, int], float]]]]) -> str | None:
+        """
         This function chooses a condition for a patient based on the age and looking at the condition_age_probability_dict
         Args:
+            pt_gender:
             age: The age of the individual we will be comparing to
             probability_dict: The probability dict of conditions with age bandings and probabilities
 
