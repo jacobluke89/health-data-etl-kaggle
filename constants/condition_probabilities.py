@@ -1,6 +1,8 @@
-from typing import List, Tuple, Dict, Union
-
-from type_constants import SubAdmissionTypes
+try:
+    from type_constants import SubAdmissionTypes
+except ModuleNotFoundError:
+    from .type_constants import SubAdmissionTypes
+from utils.util_funcs import choose_condition_for_patient
 
 condition_age_probability_dict = {
 
@@ -259,15 +261,15 @@ condition_age_probability_dict = {
                    ((65, 75), 0.14689),
                    ((76, 80), 0.18361)],  # AVG 0.056
         "Venous Thromboembolism": [((0, 10), 0.00036),
-                                   ((11, 17), 0.00073),
-                                   ((18, 25), 0.00109),
-                                   ((25, 34), 0.00145),
-                                   ((35, 44), 0.00182),
-                                   ((45, 59), 0.00218),
-                                   ((45, 54), 0.00255),
-                                   ((55, 64), 0.00291),
-                                   ((65, 75), 0.00327),
-                                   ((76, 80), 0.00364)]  # AVG 0.002
+                               ((11, 17), 0.00073),
+                               ((18, 25), 0.00109),
+                               ((25, 34), 0.00145),
+                               ((35, 44), 0.00182),
+                               ((45, 59), 0.00218),
+                               ((45, 54), 0.00255),
+                               ((55, 64), 0.00291),
+                               ((65, 75), 0.00327),
+                               ((76, 80), 0.00364)]  # AVG 0.002
     },
     SubAdmissionTypes.DERMATOLOGY.name: {
         "Acne": {"male": [((0, 10), 0.0),
@@ -621,67 +623,7 @@ if __name__ == "__main__":
     import numpy as np
 
 
-    def find_probability_for_age(age: int, condition_probabilities: List[Tuple[Tuple[int, int], float]]) -> int:
-        """
-        This function returns probability based on age and a given condition probability list.
-        Args:
-            age: The age we will be comparing to
-            condition_probabilities: The list of conditional probabilities
 
-        Returns:
-            int: the probability, if 0 returns, edge case, should be investigated.
-
-        """
-        for (age_min, age_max), prob in condition_probabilities:
-            if age_min <= age <= age_max:
-                return prob
-        return 0
-
-
-    def choose_condition_for_patient(age: int, pt_gender: str,
-                                     probability_dict: Dict[str, List[Tuple[Tuple[int, int], float]] |
-                                                       Dict[str, List[Tuple[Tuple[int, int], float]]]]) -> str | None:
-        """
-        This function chooses a condition for a patient based on the age and looking at the condition_age_probability_dict
-        Args:
-            pt_gender:
-            age: The age of the individual we will be comparing to
-            probability_dict: The probability dict of conditions with age bandings and probabilities
-
-        Returns:
-            A condition or None if 0 probability
-        """
-        conditions_probabilities = []
-        # Prepare a list of conditions with their probability for the given age
-        for condition, age_prob in probability_dict.items():
-            if type(age_prob) is dict:
-                for gender, age_prob_specific, in age_prob.items():
-                    if pt_gender == gender:
-                        prob = find_probability_for_age(age, age_prob_specific)
-                        if prob > 0:  # Consider only conditions with a non-zero probability
-                            conditions_probabilities.append((condition, prob))
-            if type(age_prob) is list:
-                prob = find_probability_for_age(age, age_prob)
-                if prob > 0:  # Consider only conditions with a non-zero probability
-                    conditions_probabilities.append((condition, prob))
-
-        # If no condition is applicable based on age, return None or handle as appropriate
-        if not conditions_probabilities:
-            return None
-
-        # Sort the conditions by probability for easier handling (optional)
-        conditions_probabilities.sort(key=lambda x: x[1], reverse=True)
-
-        # Use cumulative probabilities to select a condition
-        total_prob = sum(prob for _, prob in conditions_probabilities)
-        random_prob = np.random.uniform(0, total_prob)
-        cumulative_prob = 0
-        for condition, prob in conditions_probabilities:
-            cumulative_prob += prob
-            if random_prob < cumulative_prob:
-                return condition
-
-        return None
 
 
     # Example usage
@@ -879,7 +821,3 @@ if __name__ == "__main__":
                             ((65, 75), 0.0),
                             ((76, 80), 0.0)]},  # 0.02 female
     }
-
-    # Choose a condition for a single patient
-    chosen_condition = choose_condition_for_patient(patient_age, "male", condition_age_probability_dict)
-    print(chosen_condition)

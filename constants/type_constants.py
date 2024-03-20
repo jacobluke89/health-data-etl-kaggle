@@ -352,9 +352,26 @@ class ConditionTests(Enum):
     INJURY_RTC = ["X-rays", "CT scans", "MRI", "Ultrasound", "Blood tests"]
     SELF_INFLICTED = ["Psychological assessment", "X-rays (for physical injuries)", "Blood tests",
                       "Toxicology screening"]
-    NEUROLOGY = ["MRI or CT scans of the brain", "Electroencephalogram (EEG)", "Lumbar puncture", "Nerve conduction "
-                                                                                                  "studies",
-                 "Blood tests"]
+    CANCER = [
+        "Imaging Tests - Mammography",
+        "Imaging Tests - Low-dose computed tomography (LDCT)",
+        "Imaging Tests - Ultrasound",
+        "Imaging Tests - MRI",
+        "Laboratory Tests - Blood Tests",
+        "Laboratory Tests - Urine Tests",
+        "Laboratory Tests - Stool Tests",
+        "Tissue Biopsy",
+        "Endoscopic Examinations - Colonoscopy and Sigmoidoscopy",
+        "Endoscopic Examinations - Upper Endoscopy",
+        "Genetic Tests",
+        "Pap Smear and HPV Testing",
+        "Dermatological Examinations",
+        "Barium Enema",
+        "Bone Scans",
+        "Digital Rectal Exam (DRE)"
+    ]
+    NEUROLOGY = ["MRI or CT scans of the brain", "Electroencephalogram (EEG)", "Lumbar puncture",
+                 "Nerve conduction studies", "Blood tests"]
     CARDIOLOGY = ["ECG", "Echocardiogram", "Stress tests", "Cardiac catheterization", "Blood tests"]
     ORTHOPEDICS = ["X-rays", "MRI", "CT scans", "Bone scans", "Blood tests"]
     PEDIATRICS = ["Blood tests", "Urine tests", "X-rays", "Ultrasound", "MRI", "Developmental screening tests"]
