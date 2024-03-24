@@ -61,7 +61,7 @@ admission_mapping = {
         SubAdmissionTypes.CANCER: base_structure(SubAdmissionTypes.CANCER, 'all')
     },
     AdmissionTypes.HOSPITAL_REFERRAL: {
-        SubAdmissionTypes.CARDIOLOGY: base_structure(SubAdmissionTypes.CARDIOLOGY, "day_in"),
+        SubAdmissionTypes.CARDIOLOGY: base_structure(SubAdmissionTypes.CARDIOLOGY, "all"),
         SubAdmissionTypes.NEPHROLOGY: base_structure(SubAdmissionTypes.NEPHROLOGY, "all"),
         SubAdmissionTypes.NEUROLOGY: base_structure(SubAdmissionTypes.NEUROLOGY, "all"),
         SubAdmissionTypes.ONCOLOGY: base_structure(SubAdmissionTypes.ONCOLOGY, "all"),
