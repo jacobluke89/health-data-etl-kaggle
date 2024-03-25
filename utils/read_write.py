@@ -10,8 +10,8 @@ def read_postgres_table(table_name: str):
 def write_postgres_table(df: DataFrame, table_name: str, mode: str = "overwrite"):
     try:
         # Ensure 'df' is a DataFrame and 'mode' is one of the allowed modes
-        if not isinstance(df, DataFrame):
-            raise ValueError("df must be a DataFrame")
+        # if not isinstance(df, DataFrame):
+        #     raise ValueError("df must be a DataFrame")
         if mode not in ["overwrite", "append", "ignore", "error", "errorifexists"]:
             raise ValueError("Invalid write mode specified")
 
