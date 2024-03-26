@@ -156,7 +156,6 @@ class ConditionsCreator:
         conditions_probabilities = []
         patients_conditions = defaultdict(list)
         for row in df_aggregated.toLocalIterator():
-            unique_id = row["unique_id"]
             probability_entries = [((entry.age_min, entry.age_max), entry.probability) for entry in
                                    row["probability_entries"]]
             row_infos = [(entry.Age, entry.condition, entry.is_pediatric, entry.unique_id, entry.stay_types, entry.condition_admission_type,
@@ -175,7 +174,7 @@ class ConditionsCreator:
                 conditions_probabilities.append(
                     (f"{unique_id}_{top_level_admission}_{condition_admission_type}", condition_label, prob))
                 patient_name = unique_id.split('_')[0]
-                patients_conditions[patient_name].append((unique_id, stay_types, top_level_admission, condition_label, prob))
+                patients_conditions[patient_name].append((unique_id, stay_types, condition_admission_type, top_level_admission, condition_label, prob))
 
         # Sort the conditions by probability for easier handling (optional)
         conditions_probabilities.sort(key=lambda x: x[1], reverse=True)
@@ -187,14 +186,19 @@ class ConditionsCreator:
             while not condition_selected:
                 random_prob = np.random.uniform(0, total_prob)
                 cumulative_prob = 0
-                for uniq_id, stay_types, top_level, condition, prob in conditions:
+                for uniq_id, stay_types, submission_type, top_level, condition, prob in conditions:
                     cumulative_prob += prob
                     if random_prob < cumulative_prob:
-                        chosen_conditions_list.append((uniq_id, stay_types, top_level, condition))
+                        chosen_conditions_list.append((uniq_id, stay_types, submission_type, top_level, condition))
                         condition_selected = True
                         break  # Stop after selecting one condition for the current patient
         return self._spark.createDataFrame(chosen_conditions_list,
-                                           ("unique_id", "stay_types", "chosen_top_level_admission", "chosen_condition"))
+                                           ("unique_id",
+                                            "stay_types",
+                                            "submission_type",
+                                            "chosen_top_level_admission",
+                                            "chosen_condition")
+                                           )
 
     def runner(self):
         return self._choose_conditions_for_patients()
