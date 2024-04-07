@@ -1,5 +1,3 @@
-from utils.conditions_creator import ConditionsCreator
-
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import spark_partition_id
