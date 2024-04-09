@@ -20,7 +20,6 @@ class AdmissionTypes(Enum):
 
 
 class SubAdmissionTypes(Enum):
-    CANCER = auto()
     CARDIOLOGY = auto()
     DERMATOLOGY = auto()
     ENDOCRINOLOGY = auto()
@@ -47,7 +46,7 @@ class SubAdmissionTypes(Enum):
 
 
 class ConditionsOrDiagnosis(Enum):
-    CANCER = [
+    ONCOLOGY = [
         "Breast Cancer",
         "Lung Cancer",
         "Colorectal Cancer",
@@ -256,18 +255,6 @@ class ConditionsOrDiagnosis(Enum):
         "Breast Disorders",
         "Vulvovaginitis",
         "Precocious Puberty"
-    ]
-    ONCOLOGY = [
-        "Breast Cancer",
-        "Lung Cancer",
-        "Prostate Cancer",
-        "Colorectal Cancer",
-        "Melanoma",
-        "Leukemia",
-        "Lymphoma",
-        "Pancreatic Cancer",
-        "Ovarian Cancer",
-        "Bladder Cancer"
     ]
     OPHTHALMOLOGY = [
         "Refractive Errors",

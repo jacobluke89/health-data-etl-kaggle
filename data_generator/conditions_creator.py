@@ -55,15 +55,22 @@ class ConditionsCreator:
 
         female_only = [SubAdmissionTypes.MATERNITY.name,
                        SubAdmissionTypes.OBSTETRICS.name]  # TODO Obstetrics needs sorting still.
-
+        female_only_conditions = ["Cervical Cancer",
+                                  "Ovarian Cancer",
+                                  "Polycystic Ovary Syndrome (PCOS)"]
+        male_only_conditions = ["Prostate Cancer",
+                                "Testicular Cancer"]
         return f_df.filter(
             # Exclude male patients with female-only conditions
             (~(col("top_level_admission").isin(female_only)) & (~col("is_female"))) |
-            # Include all female patients but apply age filter for specific conditions
-            (col("is_female") & ~(
-                    (col("top_level_admission") == SubAdmissionTypes.MATERNITY.name) &
-                    ((col("Age") < 16) | (col("Age") > 50))
-            )) |
+            # Include all female patients but apply age filter for specific conditions and remove male only conditions
+            (col("is_female")
+             & ~((col("top_level_admission") == SubAdmissionTypes.MATERNITY.name) &
+                 ((col("Age") < 16) | (col("Age") > 50)))
+             | col("condition").isin(male_only_conditions)
+             ) |
+            # Filter female conditions from male patients
+            (~col("is_female") & col("condition").isin(female_only_conditions)) |
             # Filter for geriatric conditions
             (~((col("sub_level_admission") == SubAdmissionTypes.GERIATRICS.name) & ~col("is_geriatric"))) |
             # Include conditions with no gender specified or conditions applicable to females

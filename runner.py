@@ -1,13 +1,8 @@
-from pyspark.sql import SparkSession
-
-from data_generator.csv_data_processor import CSVDataProcessor
+from spark_instance import spark
+from utils.read_write import read_postgres_table
 
 if __name__ == '__main__':
 
-    spark = SparkSession.builder.appName("ETL").getOrCreate()
+    _spark = spark
 
-    csv_reader = CSVDataProcessor(spark, "data/healthcare_dataset.csv")
-
-    df = csv_reader.run()
-
-    df.show()
+    df = read_postgres_table("dob_age_raw_data")

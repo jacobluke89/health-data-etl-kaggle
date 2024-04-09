@@ -33,7 +33,7 @@ def process_partition(spark: SparkSession,
                       *args,
                       **kwargs) -> DataFrame:
     """
-    This processes the partition result of the spark_parition process result from the TaskWrapper.runner()
+    This processes the partition result of the spark_partition process result from the TaskWrapper.runner()
     Args:
         spark (SparkSession): The SparkSession
         partition_id (int): The partition id to filter against the df

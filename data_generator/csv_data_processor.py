@@ -26,6 +26,6 @@ class CSVDataProcessor:
 
         return df.toDF(*new_columns)
 
-    def run(self):
+    def runner(self):
         df = self._read_csv()
         return self.replace_spaces_in_column_headers(df)

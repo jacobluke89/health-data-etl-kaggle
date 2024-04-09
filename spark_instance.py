@@ -1,6 +1,6 @@
 from pyspark import SparkConf
 
-from data_generator.constants import POSTGRES_JAR_PATH, SPARK_EXEC_MEMORY, SPARK_DRIVER_MEMORY, SPARK_CORES
+from data_generator.constants import POSTGRES_JAR_PATH
 from pyspark.sql import SparkSession
 
 conf = SparkConf()
@@ -13,7 +13,9 @@ spark = (SparkSession.builder.appName("ETL")
          .config("spark.sql.adaptive.enabled", "true")
          .config("spark.jars", POSTGRES_JAR_PATH)
          .config("spark.sql.debug.maxToStringFields", 10000000)
-         .config("spark.driver.memory", SPARK_DRIVER_MEMORY)
-         .config("spark.executor.memory", SPARK_EXEC_MEMORY)
-         .config("spark.executor.cores", SPARK_CORES)
-         .getOrCreate())
+         .config("spark.driver.memory", "8g")
+         .config("spark.executor.memory", "8g")
+         .config("spark.executor.cores", "4")
+         .getOrCreate()
+         )
+

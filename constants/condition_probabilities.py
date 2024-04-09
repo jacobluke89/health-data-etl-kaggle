@@ -5,7 +5,7 @@ except ModuleNotFoundError:
 
 condition_age_probability_dict = {
 
-    SubAdmissionTypes.CANCER.name: {
+    SubAdmissionTypes.ONCOLOGY.name: {
         "Bladder Cancer": [((0, 10), 0.0),
                            ((11, 17), 0.00018),
                            ((18, 25), 0.0002),
@@ -532,18 +532,6 @@ condition_age_probability_dict = {
         "Premature Ovarian Insufficiency (POI)": [],
         "Turner Syndrome": [],
         "Vulvovaginitis": []
-    },
-    SubAdmissionTypes.ONCOLOGY.name: {
-        "Bladder Cancer": [],
-        "Breast Cancer": [],
-        "Colorectal Cancer": [],
-        "Leukemia": [],
-        "Lung Cancer": [],
-        "Lymphoma": [],
-        "Melanoma": [],
-        "Ovarian Cancer": [],
-        "Pancreatic Cancer": [],
-        "Prostate Cancer": []
     },
     SubAdmissionTypes.OPHTHALMOLOGY.name: {
         "Age-related Macular Degeneration (AMD)": [],

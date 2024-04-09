@@ -1,10 +1,13 @@
 from pprint import pprint
+from random import choices
 from typing import List, Union, Tuple
 
 from IPython.core.display_functions import display
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, count
 from faker import Faker
+
+from constants.type_constants import SubAdmissionTypes
 
 
 def get_row_count(df: DataFrame, verbose=False):
@@ -82,8 +85,23 @@ def verify_ranking_counts(_df: DataFrame, ranked_df: DataFrame, names: list, uni
 
 
 def create_doctor_names():
+    return [create_fake_name("Dr.") for _ in range(50)]
+
+def create_fake_name(salutation: str = None):
     fake = Faker()
-    return [f"Dr. {fake.first_name()} {fake.last_name()}" for _ in range(50)]
+    initials = ' '.join([f"{fake.random_uppercase_letter()}." for _ in
+                         range(choices([1, 2, 3], weights=[1, 0.5, 0.2], k=1)[0])])
+    if salutation is not None:
+        return f"{salutation}{fake.first_name()} {fake.last_name()}"
+    else:
+        return f"{initials} {fake.last_name()}"
+
+
+def create_doctor_names_for_all_specialties():
+    doctor_names_by_specialty = {}
+    for subtype in SubAdmissionTypes:
+        doctor_names_by_specialty[subtype.name] = create_doctor_names()
+    return doctor_names_by_specialty
 
 
 age_ranges_weights = [
@@ -101,8 +119,7 @@ age_ranges_weights = [
 
 
 def calculate_weighted_probabilities(target_average: float,
-                                     age_ranges: List[Tuple[Tuple[int, int], int]] = None) -> list[
-    Tuple[tuple[int, int], float]]:
+                                     age_ranges: List[Tuple[Tuple[int, int], int]] = None) -> list[Tuple[tuple[int, int], float]]:
     if age_ranges is None:
         age_ranges = age_ranges_weights
     total_weight = sum(age_range[1] for age_range in age_ranges)
@@ -166,6 +183,6 @@ new_probabilities = [((0, 10), 0.0),
                      ((76, 80), 0.05522)]
 overall_avg_example = 0.014
 
-if __name__ == '__main__':
-    probs = reverse_engineer_weights(new_probabilities, overall_avg_example)
-    pprint(probs)
+# if __name__ == '__main__':
+#     probs = reverse_engineer_weights(new_probabilities, overall_avg_example)
+#     pprint(probs)
