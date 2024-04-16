@@ -87,7 +87,7 @@ def verify_ranking_counts(_df: DataFrame, ranked_df: DataFrame, names: list, uni
 def create_doctor_names():
     return [create_fake_name("Dr.") for _ in range(50)]
 
-def create_fake_name(salutation: str = None):
+def create_fake_name(salutation=None):
     fake = Faker()
     initials = ' '.join([f"{fake.random_uppercase_letter()}." for _ in
                          range(choices([1, 2, 3], weights=[1, 0.5, 0.2], k=1)[0])])
