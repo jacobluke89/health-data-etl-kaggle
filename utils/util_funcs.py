@@ -1,14 +1,50 @@
-from pprint import pprint
 from random import choices
-from typing import List, Union, Tuple
+from typing import List, Tuple
 
-from IPython.core.display_functions import display
-from pyspark.sql import DataFrame
-from pyspark.sql.functions import col, count
+from pyspark.sql import DataFrame, SparkSession
 from faker import Faker
+from pyspark.sql.functions import col, lit, rand, sum
+from pyspark.sql import Row
+
 
 from constants.type_constants import SubAdmissionTypes
+from data_generator.csv_data_processor import CSVDataProcessor
 
+
+def create_distributed_age_df(spark: SparkSession, file_path: str, dataset_size: int = 10000) -> DataFrame:
+    """
+    This function creates a distributed age using a csv file which should contain an age distribution
+    from 0 to 100+, where 100+ is represented by 100 in the csv file.  This then is used to create
+    an age distribution from that given file. The data is obtained from population.un.org
+    Args:
+        spark (SparkSession): The SparkSession
+        file_path (str): the path where the csv is stored, the column required is "Population Total" renamed from "Value"
+        dataset_size (int): the size of the dataset at the end of the process.
+    Returns:
+        DataFrame: A dataframe of age distributions.
+    """
+    csv_age_file_file = CSVDataProcessor(spark, file_path)
+
+    csv_age_sq_df = csv_age_file_file.runner()
+    total_population = csv_age_sq_df.select(sum("population_total")).collect()[0][0]
+
+    csv_age_sq_df = csv_age_sq_df.withColumn("density", col("population_total") / lit(total_population))
+
+    # Normalize the density to ensure it sums to 1
+    total_density = csv_age_sq_df.select(sum("density")).collect()[0][0]
+    new_csv_age_uk_sq_df = csv_age_sq_df.withColumn("normalized_density", col("density") / lit(total_density))
+
+    # Oversample by a small percentage, this is to take care of rounding errors in the system
+    oversample_factor = 1.1
+    oversample_num = int(dataset_size * oversample_factor)
+    sampled_rdd = new_csv_age_uk_sq_df.rdd.flatMap(
+        lambda row: [row['age']] * int(row['normalized_density'] * oversample_num)
+    )
+
+    row_rdd = sampled_rdd.map(lambda age: Row(Age=age))
+    sampled_df = spark.createDataFrame(row_rdd)
+
+    return sampled_df.orderBy(rand()).limit(dataset_size)
 
 def get_row_count(df: DataFrame, verbose=False):
     """
@@ -23,78 +59,37 @@ def get_row_count(df: DataFrame, verbose=False):
     return df.count()
 
 
-def display_df(spark_df: DataFrame, num_rows: int = 20, select_rows: List = None):
-    if select_rows:
-        spark_df = spark_df.select(select_rows)
-    pandas_df = spark_df.toPandas()
-    display(pandas_df.head(num_rows))
-
-
-def get_column_names(df: DataFrame):
-    column_names = df.columns
-    print(column_names)
-
-
-def remove_data(df_driver: DataFrame, df_anti: DataFrame, condition_1: Union[bool, col], condition_2: Union[bool, col]):
-    result_df = df_driver.join(df_anti,
-                               on=['sub_level_admission', 'DOB'],
-                               how='left_anti')
-
-    assert result_df.where(condition_1 & condition_2).count() == 0
-    return result_df
-
-
-def verify_ranking(_df: DataFrame, ranked_df: DataFrame):
-    joined_df = _df.alias("df").join(
-        ranked_df.alias("ranked"),
-
-        (col("df.unique_id") == col("ranked.unique_id")),
-        "inner"
-    )
-
-    verification_df = joined_df.select(
-        col("df.unique_id")
-    ).distinct().groupBy("unique_id").agg(
-        count("unique_id").alias("unique_id_count")
-    )
-
-    # Check if any name has a mismatch in the count of unique IDs
-    mismatch_count = verification_df.filter("unique_id_count > 1").count()
-
-    # Assert that there are no mismatches
-    assert mismatch_count == 0, f"There are names with mismatched unique ID counts. mismatch_count: {mismatch_count}"
-
-
-def verify_ranking_counts(_df: DataFrame, ranked_df: DataFrame, names: list, unique_ids: list):
-    for name, unique_id in zip(names, unique_ids):
-        # Define filter conditions
-        name_condition = col("name") == name
-        unique_id_condition = col("unique_id") == unique_id
-        stay_name_condition = col("stay_name").like(f"{name}_%")
-
-        df_filtered_count = (_df
-                             .filter(name_condition & unique_id_condition & stay_name_condition)
-                             .count())
-
-        ranked_df_filtered_count = (ranked_df
-                                    .filter(name_condition & unique_id_condition & stay_name_condition)
-                                    .count())
-
-        # Assert that the counts are equal for each name-unique_id pair
-        assert df_filtered_count == ranked_df_filtered_count, f"The number of matching rows for {name} with unique ID {unique_id} should be the same in both DataFrames."
-
-
 def create_doctor_names():
-    return [create_fake_name("Dr.") for _ in range(50)]
+    """
+    Generate a list of doctor names.
 
-def create_fake_name(salutation=None):
+    Returns:
+        list: A list of names prefixed with 'Dr.'.
+    """
     fake = Faker()
-    initials = ' '.join([f"{fake.random_uppercase_letter()}." for _ in
-                         range(choices([1, 2, 3], weights=[1, 0.5, 0.2], k=1)[0])])
-    if salutation is not None:
-        return f"{salutation}{fake.first_name()} {fake.last_name()}"
+    return [generate_name(fake, salutation="Dr.") for _ in range(50)]
+
+
+def generate_name(fake, salutation=None, initials_count=None):
+    """
+    Generate a name with optional salutation and specific count of initials.
+
+    Args:
+        fake: Instance of Faker used to generate names.
+        salutation (str, optional): Prefix for the name, e.g., 'Dr.'.
+        initials_count (int, optional): Specifies the number of initials to generate.
+
+    Returns:
+        str: A generated name with or without initials and salutation.
+    """
+    if initials_count is None:
+        initials_count = choices([1, 2, 3], weights=[1, 0.5, 0.2], k=1)[0]
+    initials = ' '.join([f"{fake.random_uppercase_letter()}." for _ in range(initials_count)])
+    surname = fake.last_name()
+    if salutation:
+        return f"{salutation} {fake.first_name()} {surname}"
     else:
-        return f"{initials} {fake.last_name()}"
+        return f"{initials} {surname}"
 
 
 def create_doctor_names_for_all_specialties():
