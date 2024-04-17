@@ -18,7 +18,7 @@ def create_random_dob_pandas_udf(ages: pd.Series) -> pd.Series:
     random_days = np.random.randint(0, 365, size=len(ages))
     # Calculate the final DOB
     final_dobs = preliminary_dobs - pd.to_timedelta(random_days, unit='d')
-    return final_dobs
+    return final_dobs.dt.strftime('%Y%m%d')
 
 
 @pandas_udf(StringType())
