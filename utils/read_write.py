@@ -2,7 +2,7 @@ from pyspark.errors import AnalysisException
 from pyspark.pandas import DataFrame
 
 from spark_instance import spark
-from data_generator.constants import properties, POSTGRES_URL
+from constants.constants import properties, POSTGRES_URL
 
 def read_postgres_table(table_name: str):
     return spark.read.jdbc(url=POSTGRES_URL, table=table_name, properties=properties)

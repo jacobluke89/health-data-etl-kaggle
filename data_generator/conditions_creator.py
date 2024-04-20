@@ -133,7 +133,7 @@ class ConditionsCreator:
             aggregated_df: containing the probability entries and row infos
 
         Returns:
-            Tuple[List[Tuple[str, str | Any, float | int]], defaultdict[Any, list]]
+            Tuple[List[Tuple[str, str | Any, float | int]], default-dict[Any, list]]
         """
         conditions_probabilities = []
         patients_conditions = defaultdict(list)
@@ -209,5 +209,11 @@ class ConditionsCreator:
                                            ])
                                            )
 
-    def runner(self):
+    def runner(self) -> DataFrame:
+        """
+        Runner function for this class.
+        Returns:
+            DataFrame : A DataFrame of chosen conditions, as defined in the schema in this return function call:
+            see self._choose_conditions_for_patients()
+        """
         return self._choose_conditions_for_patients()

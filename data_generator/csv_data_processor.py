@@ -1,3 +1,4 @@
+from pyspark.errors import AnalysisException
 from pyspark.sql import SparkSession, DataFrame
 
 class CSVDataProcessor:
@@ -7,7 +8,12 @@ class CSVDataProcessor:
         self.file_path = file_path
         self.sep = sep
 
-    def _read_csv(self):
+    def _read_csv(self) -> DataFrame:
+        """
+        reads a csv file
+        Returns:
+            DataFrame: representing the csv file.
+        """
         return self._spark.read.csv(self.file_path, sep=self.sep, inferSchema=True, header=True)
 
     @staticmethod
@@ -26,6 +32,18 @@ class CSVDataProcessor:
 
         return df.toDF(*new_columns)
 
-    def runner(self):
-        df = self._read_csv()
+    def runner(self) -> DataFrame | None:
+        """
+        Runs this class and returns a DataFrame representing the csv file
+        Returns:
+            DataFrame:
+        """
+        try:
+            df = self._read_csv()
+        except AnalysisException as e:
+            print(f"File, {self.file_path} not found, please check location thanks")
+            print(f"Exception, {e}")
+            return
+        except Exception as e:
+            print("Something went wrong running the csv file")
         return self.replace_spaces_in_column_headers(df)

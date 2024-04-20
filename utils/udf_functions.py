@@ -12,7 +12,15 @@ from utils.util_funcs import generate_name
 
 @pandas_udf(DateType())
 def create_random_dob_pandas_udf(ages: pd.Series) -> pd.Series:
-    today = pd.Timestamp('today').normalize()
+    """
+    This function will generate a random Date of Birth given the age passed  in.
+    Args:
+        ages (pd.Series): The age of the given row passed in.
+
+    Returns:
+        pd.Series: A DOB, in yyyMMdd format.
+    """
+    today = pd.Timestamp('today').normalise()
 
     preliminary_dobs = today - pd.to_timedelta(ages * 365, unit='d')
     random_days = np.random.randint(0, 365, size=len(ages))
@@ -51,10 +59,10 @@ def random_gender_pd_udf(cntry: pd.Series) -> pd.Series:
     It will weight it accordance with the country passed in.
     Data for this can be found at population.un.org
     Args:
-        cntry: the chosen country e.g. uk, used to obtain population weights from
+        cntry (pd.Series): the chosen country e.g. uk, used to obtain population weights from
         the population_weights dictionary
     Returns:
-        a given gender, Male or Female
+        pd.Series: given gender, Male or Female
     """
     weights_dict = broad_weights.value
 
@@ -63,7 +71,7 @@ def random_gender_pd_udf(cntry: pd.Series) -> pd.Series:
             weights = weights_dict[country]
             return choices(["Male", "Female"], weights=[weights["male"], weights["female"]], k=1)[0]
         else:
-            print(f"Country, {country} not in the weights dictionary")
+            print(f"Country, {country} not in the weights dictionary, default 50 / 50 split.")
             return choices(["Male", "Female"], weights=[50, 50], k=1)[0]
 
     return cntry.apply(get_gender)
@@ -86,11 +94,11 @@ def choose_blood_type_udf(dummy: pd.Series) -> pd.Series:
     This function randomly chooses a blood type based on the blood type
     distribution, this information was found at
     https://www.blood.co.uk/why-give-blood/blood-types/
-    therefore is uk specific
+    therefore is uk specific, further, it does not consider ethnicity.
     Args:
-        dummy: required to apply the lambda
+        dummy (pd.Series): required to apply the lambda
     Returns:
-        a blood type
+       pd.Series: a blood type
     """
     types = list(blood_type_distribution.keys())
     weights = list(blood_type_distribution.values())
