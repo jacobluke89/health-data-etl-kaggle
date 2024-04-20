@@ -6,7 +6,7 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import col, when, collect_list, struct, broadcast
 from pyspark.sql.types import StructType, StructField, StringType
 
-from constants.type_constants import SubAdmissionTypes
+from constants.type_constants import DepartmentTypes
 
 
 class ConditionsCreator:
@@ -53,8 +53,8 @@ class ConditionsCreator:
             DataFrame: The filtered DataFrame.
         """
 
-        female_only = [SubAdmissionTypes.MATERNITY.name,
-                       SubAdmissionTypes.OBSTETRICS.name]  # TODO Obstetrics needs sorting still.
+        female_only = [DepartmentTypes.MATERNITY.name,
+                       DepartmentTypes.OBSTETRICS.name]  # TODO Obstetrics needs sorting still.
         female_only_conditions = ["Cervical Cancer",
                                   "Ovarian Cancer",
                                   "Polycystic Ovary Syndrome (PCOS)"]
@@ -65,14 +65,14 @@ class ConditionsCreator:
             (~(col("top_level_admission").isin(female_only)) & (~col("is_female"))) |
             # Include all female patients but apply age filter for specific conditions and remove male only conditions
             (col("is_female")
-             & ~((col("top_level_admission") == SubAdmissionTypes.MATERNITY.name) &
+             & ~((col("top_level_admission") == DepartmentTypes.MATERNITY.name) &
                  ((col("Age") < 16) | (col("Age") > 50)))
              | col("condition").isin(male_only_conditions)
              ) |
             # Filter female conditions from male patients
             (~col("is_female") & col("condition").isin(female_only_conditions)) |
             # Filter for geriatric conditions
-            (~((col("sub_level_admission") == SubAdmissionTypes.GERIATRICS.name) & ~col("is_geriatric"))) |
+            (~((col("sub_level_admission") == DepartmentTypes.GERIATRICS.name) & ~col("is_geriatric"))) |
             # Include conditions with no gender specified or conditions applicable to females
             (col("condition_gender").isNull()) |
             (col("is_female") & (col("condition_gender") != "female"))

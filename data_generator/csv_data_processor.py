@@ -1,6 +1,7 @@
 from pyspark.errors import AnalysisException
 from pyspark.sql import SparkSession, DataFrame
 
+
 class CSVDataProcessor:
 
     def __init__(self, spark: SparkSession, file_path: str, sep: str = ','):
@@ -38,6 +39,7 @@ class CSVDataProcessor:
         Returns:
             DataFrame:
         """
+        df = None
         try:
             df = self._read_csv()
         except AnalysisException as e:
@@ -46,4 +48,5 @@ class CSVDataProcessor:
             return
         except Exception as e:
             print("Something went wrong running the csv file")
+            print(e)
         return self.replace_spaces_in_column_headers(df)

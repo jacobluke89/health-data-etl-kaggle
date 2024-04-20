@@ -1,11 +1,5 @@
 from dotenv import load_dotenv
 import os
-
-class ColConstants:
-    peds = "pediatric_"
-    geri = "geriatric_"
-
-
 load_dotenv()
 
 # Access environment variables

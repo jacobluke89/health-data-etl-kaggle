@@ -19,7 +19,7 @@ class AdmissionTypes(Enum):
     SELF_REFERRAL = auto()
 
 
-class SubAdmissionTypes(Enum):
+class DepartmentTypes(Enum):
     CARDIOLOGY = auto()
     DERMATOLOGY = auto()
     ENDOCRINOLOGY = auto()

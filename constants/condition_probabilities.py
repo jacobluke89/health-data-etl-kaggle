@@ -1,11 +1,11 @@
 try:
-    from type_constants import SubAdmissionTypes
+    from type_constants import DepartmentTypes
 except ModuleNotFoundError:
-    from .type_constants import SubAdmissionTypes
+    from .type_constants import DepartmentTypes
 
 condition_age_probability_dict = {
 
-    SubAdmissionTypes.ONCOLOGY.name: {
+    DepartmentTypes.ONCOLOGY.name: {
         "Bladder Cancer": [((0, 10), 0.0),
                            ((11, 17), 0.00018),
                            ((18, 25), 0.0002),
@@ -177,7 +177,7 @@ condition_age_probability_dict = {
                            ((65, 75), 0.0008),
                            ((76, 80), 0.00172)]  # AVG 0.00037
     },
-    SubAdmissionTypes.CARDIOLOGY.name: {
+    DepartmentTypes.CARDIOLOGY.name: {
         "Aneurysms": [((0, 10), 0.0),
                       ((11, 17), 0.00037),
                       ((18, 25), 0.00042),
@@ -270,7 +270,7 @@ condition_age_probability_dict = {
                                ((65, 75), 0.00327),
                                ((76, 80), 0.00364)]  # AVG 0.002
     },
-    SubAdmissionTypes.DERMATOLOGY.name: {
+    DepartmentTypes.DERMATOLOGY.name: {
         "Acne": {"male": [((0, 10), 0.0),
                           ((11, 17), 0.09998),
                           ((18, 25), 0.07142),
@@ -372,7 +372,7 @@ condition_age_probability_dict = {
                                      ((65, 75), 0.75959),
                                      ((76, 80), 0.88411)],  # .31
     },
-    SubAdmissionTypes.ENDOCRINOLOGY.name: {
+    DepartmentTypes.ENDOCRINOLOGY.name: {
         "Addison's Disease": [],
         "Cushing's Syndrome": [],
         "Diabetes - Type 1": [],
@@ -385,7 +385,7 @@ condition_age_probability_dict = {
         "Polycystic Ovary Syndrome (PCOS)": [],
         "Thyroid Disorders - including Hypothyroidism and Hyperthyroidism": []
     },
-    SubAdmissionTypes.GASTROENTEROLOGY.name: {
+    DepartmentTypes.GASTROENTEROLOGY.name: {
         "Chronic Liver Disease - including Hepatitis and Cirrhosis": [],
         "Coeliac Disease": [],
         "Diverticular Disease": [],
@@ -396,7 +396,7 @@ condition_age_probability_dict = {
         "Irritable Bowel Syndrome (IBS)": [],
         "Pancreatitis": [],
         "Peptic Ulcers": []},
-    SubAdmissionTypes.GASTROINTESTINAL_DISORDERS.name: {
+    DepartmentTypes.GASTROINTESTINAL_DISORDERS.name: {
         "Celiac Disease": [],
         "Cirrhosis": [],
         "Crohn's Disease": [],
@@ -407,10 +407,10 @@ condition_age_probability_dict = {
         "Pancreatitis": [],
         "Peptic Ulcer Disease": [],
         "Ulcerative Colitis": []},
-    SubAdmissionTypes.GERIATRICS.name: {
+    DepartmentTypes.GERIATRICS.name: {
 
     },
-    SubAdmissionTypes.HEMATOLOGY.name: {
+    DepartmentTypes.HEMATOLOGY.name: {
         "Anemia": [],
         "Deep Vein Thrombosis (DVT)": [],
         "Hemochromatosis": [],
@@ -421,7 +421,7 @@ condition_age_probability_dict = {
         "Polycythemia Vera": [],
         "Sickle Cell Disease": [],
         "Thrombocytopenia": []},
-    SubAdmissionTypes.INFECTIOUS_DISEASES.name: {
+    DepartmentTypes.INFECTIOUS_DISEASES.name: {
         "COVID-19": [],
         "HIV/AIDS": [],
         "Hepatitis": [],
@@ -431,7 +431,7 @@ condition_age_probability_dict = {
         "Strep Throat": [],
         "Tuberculosis": [],
         "Urinary Tract Infections (UTIs)": []},
-    SubAdmissionTypes.INJURY_RTC.name: {
+    DepartmentTypes.INJURY_RTC.name: {
         "Abrasions": [],
         "Acoustic Trauma": [],
         "Airbag Injuries": [],
@@ -475,7 +475,7 @@ condition_age_probability_dict = {
         "Traumatic Brain Injuries (TBIs)": [],
         "Upper Extremity Injuries": [],
         "Whiplash": []},
-    SubAdmissionTypes.MATERNITY.name: {
+    DepartmentTypes.MATERNITY.name: {
         "Antepartum Haemorrhage": [],
         "Gestational Diabetes Monitoring": [],
         "Induction of Labour": [],
@@ -486,7 +486,7 @@ condition_age_probability_dict = {
         "Preterm Labour": [],
         "Ruptured Membranes without Contractions": [],
         "Scheduled Caesarean Section": []},
-    SubAdmissionTypes.MUSCULOSKELETAL.name: {
+    DepartmentTypes.MUSCULOSKELETAL.name: {
         "Ankylosing Spondylitis": [],
         "Bursitis": [],
         "Fibromyalgia": [],
@@ -497,7 +497,7 @@ condition_age_probability_dict = {
         "Polymyalgia Rheumatica": [],
         "Repetitive Strain Injury (RSI)": [],
         "Tendinitis": []},
-    SubAdmissionTypes.NEPHROLOGY.name: {
+    DepartmentTypes.NEPHROLOGY.name: {
         "Acute Kidney Injury (AKI)": [],
         "Chronic Kidney Disease (CKD)": [],
         "Glomerulonephritis": [],
@@ -509,7 +509,7 @@ condition_age_probability_dict = {
         "Kidney Stones": [],
         "Urinary Tract Infections (UTIs)": [],
     },
-    SubAdmissionTypes.NEUROLOGY.name: {
+    DepartmentTypes.NEUROLOGY.name: {
         "Alzheimer's Disease": [],
         "Bell's Palsy": [],
         "Concussion": [],
@@ -521,7 +521,7 @@ condition_age_probability_dict = {
         "Sciatica": [],
         "Stroke": []
     },
-    SubAdmissionTypes.OBSTETRICS.name: {
+    DepartmentTypes.OBSTETRICS.name: {
         "Breast Disorders": [],
         "Congenital Reproductive Anomalies": [],
         "Endometriosis": [],
@@ -533,7 +533,7 @@ condition_age_probability_dict = {
         "Turner Syndrome": [],
         "Vulvovaginitis": []
     },
-    SubAdmissionTypes.OPHTHALMOLOGY.name: {
+    DepartmentTypes.OPHTHALMOLOGY.name: {
         "Age-related Macular Degeneration (AMD)": [],
         "Cataracts": [],
         "Conjunctivitis": [],
@@ -545,7 +545,7 @@ condition_age_probability_dict = {
         "Retinal Detachment": [],
         "Uveitis": []
     },
-    SubAdmissionTypes.ORTHOPEDICS.name: {
+    DepartmentTypes.ORTHOPEDICS.name: {
         "Anterior Cruciate Ligament (ACL) Injuries": [],
         "Carpal Tunnel Syndrome": [],
         "Fractures": [],
@@ -557,7 +557,7 @@ condition_age_probability_dict = {
         "Scoliosis": [],
         "Spinal Disc Herniation": []
     },
-    SubAdmissionTypes.OTORHINOLARYNGOLOGY_ENT.name: {
+    DepartmentTypes.OTORHINOLARYNGOLOGY_ENT.name: {
         "Hearing Loss": [],
         "Laryngitis": [],
         "Meniere's Disease": [],
@@ -569,7 +569,7 @@ condition_age_probability_dict = {
         "Tinnitus": [],
         "Tonsillitis": []
     },
-    SubAdmissionTypes.PSYCHIATRIC.name: {
+    DepartmentTypes.PSYCHIATRIC.name: {
         "Anxiety Disorders": [],
         "Attention Deficit Hyperactivity Disorder (ADHD)": [],
         "Autism Spectrum Disorder": [],
@@ -581,7 +581,7 @@ condition_age_probability_dict = {
         "Post-Traumatic Stress Disorder (PTSD)": [],
         "Schizophrenia": []
     },
-    SubAdmissionTypes.RESPIRATORY.name: {
+    DepartmentTypes.RESPIRATORY.name: {
         "Allergic Rhinitis": [],
         "Asthma": [],
         "Bronchitis": [],
@@ -593,7 +593,7 @@ condition_age_probability_dict = {
         "Sinusitis": [],
         "Sleep Apnea": []
     },
-    SubAdmissionTypes.SELF_INFLICTED.name: {
+    DepartmentTypes.SELF_INFLICTED.name: {
         "Bone breaking": [],
         "Burning": [],
         "Hair pulling (Trichotillomania)": [],

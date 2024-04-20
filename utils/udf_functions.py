@@ -4,14 +4,14 @@ import numpy as np
 import pandas as pd
 from faker import Faker
 from pyspark.sql.pandas.functions import pandas_udf
-from pyspark.sql.types import DateType, StringType
+from pyspark.sql.types import StringType
 
 from spark_instance import spark
 from utils.util_funcs import generate_name
 
 
-@pandas_udf(DateType())
-def create_random_dob_pandas_udf(ages: pd.Series) -> pd.Series:
+@pandas_udf(StringType())
+def create_random_dob_udf(ages: pd.Series) -> pd.Series:
     """
     This function will generate a random Date of Birth given the age passed  in.
     Args:
@@ -20,8 +20,7 @@ def create_random_dob_pandas_udf(ages: pd.Series) -> pd.Series:
     Returns:
         pd.Series: A DOB, in yyyMMdd format.
     """
-    today = pd.Timestamp('today').normalise()
-
+    today = pd.Timestamp('today').normalize()
     preliminary_dobs = today - pd.to_timedelta(ages * 365, unit='d')
     random_days = np.random.randint(0, 365, size=len(ages))
     # Calculate the final DOB

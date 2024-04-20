@@ -8,7 +8,7 @@ from pyspark.sql.functions import col, lit, rand, sum
 from pyspark.sql import Row
 
 
-from constants.type_constants import SubAdmissionTypes
+from constants.type_constants import DepartmentTypes
 from data_generator.csv_data_processor import CSVDataProcessor
 
 
@@ -133,7 +133,7 @@ def generate_name(fake, salutation=None, initials_count=None) -> str:
 
 def create_doctor_names_for_all_specialties() -> Dict:
     doctor_names_by_specialty = {}
-    for subtype in SubAdmissionTypes:
+    for subtype in DepartmentTypes:
         doctor_names_by_specialty[subtype.name] = create_doctor_names()
     return doctor_names_by_specialty
 
