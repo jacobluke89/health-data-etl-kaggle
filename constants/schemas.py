@@ -7,7 +7,7 @@ class HealthcareDataset:
     CONDITION_DIAGNOSIS = "Condition_or_Diagnosis"
     STAY_TYPE = "Stay_type"
     ADMISSION_TYPE = "Admission_type"
-    DEPARTMENT_TYPES = "Department_types"
+    DEPARTMENT_TYPE = "Department_types"
     GENDER = "Gender"
     BLOOD_TYPE = "Blood_type"
     TESTS = "Tests"
