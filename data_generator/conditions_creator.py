@@ -6,6 +6,7 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import col, when, collect_list, struct, broadcast
 from pyspark.sql.types import StructType, StructField, StringType
 
+from constants.schemas import HealthcareDataset
 from constants.type_constants import DepartmentTypes
 
 
@@ -120,7 +121,7 @@ class ConditionsCreator:
         Returns:
             DataFrame: The aggregated data
         """
-        return transformed_df.groupBy("unique_id").agg(
+        return transformed_df.groupBy(HealthcareDataset.UNIQUE_ID).agg(
             collect_list("probability_entry").alias("probability_entries"),
             collect_list("row_info").alias("row_infos"))
 
@@ -179,7 +180,7 @@ class ConditionsCreator:
 
         df_transformed = self._filter_df(df_joined)
 
-        df_transformed = df_transformed.repartition(4, "unique_id")
+        df_transformed = df_transformed.repartition(4, HealthcareDataset.UNIQUE_ID)
 
         df_aggregated = self._aggregate_data(df_transformed)
         conditions_probabilities, patients_conditions = self._iterate_aggregate_data(df_aggregated)
@@ -201,11 +202,11 @@ class ConditionsCreator:
                         break  # Stop after selecting one condition for the current patient
         return self._spark.createDataFrame(chosen_conditions_list,
                                            StructType([
-                                               StructField("unique_id", StringType()),
-                                               StructField("stay_types", StringType()),
-                                               StructField("submission_type", StringType()),
-                                               StructField("chosen_top_level_admission", StringType()),
-                                               StructField("chosen_condition", StringType())
+                                               StructField( HealthcareDataset.UNIQUE_ID, StringType()),
+                                               StructField(HealthcareDataset.STAY_TYPE, StringType()),
+                                               StructField(HealthcareDataset.ADMISSION_TYPE, StringType()),
+                                               StructField(HealthcareDataset.DEPARTMENT_TYPE, StringType()),
+                                               StructField(HealthcareDataset.CONDITION_DIAGNOSIS, StringType())
                                            ])
                                            )
 
