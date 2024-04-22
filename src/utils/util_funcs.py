@@ -5,7 +5,7 @@ from pyspark.sql import DataFrame
 from faker import Faker
 from pyspark.sql.functions import sum
 
-from constants.type_constants import DepartmentTypes
+from src.constants.type_constants import DepartmentTypes
 
 
 def get_row_count(df: DataFrame, verbose=False):
@@ -28,22 +28,22 @@ def create_doctor_names() -> List:
     Returns:
         list: A list of names prefixed with 'Dr.'.
     """
-    fake = Faker()
-    return [generate_name(fake, salutation="Dr.") for _ in range(50)]
+
+    return [generate_name(salutation="Dr.") for _ in range(50)]
 
 
-def generate_name(fake, salutation=None, initials_count=None) -> str:
+def generate_name( salutation=None, initials_count=3) -> str:
     """
     Generate a name with optional salutation and specific count of initials.
 
     Args:
-        fake: Instance of Faker used to generate names.
         salutation (str, optional): Prefix for the name, e.g., 'Dr.'.
         initials_count (int, optional): Specifies the number of initials to generate.
 
     Returns:
         str: A generated name with or without initials and salutation.
     """
+    fake = Faker()
     if initials_count is None:
         initials_count = choices([1, 2, 3], weights=[1, 0.5, 0.2], k=1)[0]
     initials = ' '.join([f"{fake.random_uppercase_letter()}." for _ in range(initials_count)])
