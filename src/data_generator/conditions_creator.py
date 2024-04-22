@@ -11,6 +11,14 @@ from ..constants.type_constants import DepartmentTypes
 
 
 class ConditionsCreator:
+    """
+    This class choose a condition for each patient, which originates from the driver_df.
+    The probability_df contains the probabilities for each condition and each given age bracket, e.g. ((11, 19), 0.012)
+    The enum_df, is a dataframe which is cross joined with the driver_df to make sure each patient is consider for
+    each possible condition.
+    This then is filtered once joined on the probability df. Then aggregated for each patient and looped through,
+    then once all possible conditions are decided upon.
+    """
 
     def __init__(self, spark: SparkSession, driver_df: DataFrame, probability_df: DataFrame, enum_df: DataFrame):
         self._spark = spark
