@@ -5,7 +5,9 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import col, lit, rand, sum
 from pyspark.sql import Row
 
-from data_generator.csv_data_processor import CSVDataProcessor
+from src.data_generator.csv_data_processor import CSVDataProcessor
+from utils.column_creator_functions import choose_blood_type, random_gender_chooser, generate_name, dob_creator, \
+    check_patient_is_pediatric, check_gender_is_female, check_patient_is_geriatric, create_unique_id
 
 
 def create_distributed_age_df(spark: SparkSession, file_path: str, dataset_size: int = 10000) -> DataFrame:
@@ -24,14 +26,42 @@ def create_distributed_age_df(spark: SparkSession, file_path: str, dataset_size:
 
     csv_age_sq_df = csv_age_file_file.runner()
 
-    new_csv_age_sq_df = normalise_population_density(csv_age_sq_df)
+    normalised_df = normalise_population_density(csv_age_sq_df)
+    sampled_rdd = oversample_ages(normalised_df, dataset_size)
 
-    sampled_rdd = oversample_ages(new_csv_age_sq_df, dataset_size)
+    row_rdd = create_rows_rdd(sampled_rdd)
 
-    row_rdd = sampled_rdd.map(lambda age: Row(Age=age))
     sampled_df = spark.createDataFrame(row_rdd)
 
     return sampled_df.orderBy(rand()).limit(dataset_size)
+
+
+def create_rows_rdd(sample_rdd: RDD) -> RDD:
+    """
+    This function creates each column for every given age row.
+    It computes the gender, then uses it to check if the gender is female.
+
+    Args:
+        sample_rdd: The sample sized data
+
+    Returns:
+        RDD: containing rows, with the new columns
+    """
+    return sample_rdd.map(
+        lambda age: (
+            lambda gender, name, dob: Row(
+                Age=int(age),
+                DOB=dob,
+                Blood_type=choose_blood_type(),
+                Gender=gender,
+                Name=name,
+                is_female=check_gender_is_female(gender),
+                is_pediatric=check_patient_is_pediatric(age),
+                is_geriatric=check_patient_is_geriatric(age),
+                unique_id=create_unique_id(name, dob)
+            )
+        )(random_gender_chooser("uk"), generate_name(), dob_creator(age))
+    )
 
 
 def normalise_population_density(csv_age_sq_df: DataFrame) -> DataFrame:
@@ -49,11 +79,11 @@ def normalise_population_density(csv_age_sq_df: DataFrame) -> DataFrame:
     """
     # Calculate the total population and add density column
     total_population = csv_age_sq_df.select(sum("population_total")).collect()[0][0]
-    csv_age_sq_df = csv_age_sq_df.withColumn("density", col("population_total") / lit(total_population))
+    density_df = csv_age_sq_df.withColumn("density", col("population_total") / lit(total_population))
 
     # normalise the density to ensure it sums to 1
-    total_density = csv_age_sq_df.select(sum("density")).collect()[0][0]
-    return csv_age_sq_df.withColumn("normalised_density", col("density") / lit(total_density))
+    total_density = density_df.select(sum("density")).collect()[0][0]
+    return density_df.withColumn("normalised_density", col("density") / lit(total_density))
 
 
 def oversample_ages(dataframe: DataFrame, dataset_size: int, oversample_factor: float = 1.1) -> RDD:
@@ -86,12 +116,11 @@ def calculate_weighted_sd(df: DataFrame, avg_age: float = 40.2) -> float:
     This function calculates the weighted standard deviation of the given dataset and average
     Args:
         df (DataFrame): containing the age and total population for that given cohort.
-        avg_age (float): The average age of the dataset, default is 40.2, for the uk.
-    Returns:
+        avg_age (float): The average age of the dataset, default is 40.2, for the United Kingdom (UK).
         float: The weighted standard deviation
     """
     csv_age_sq_df = df.withColumn("weighted_squared_diff",
-                                     lit((col("age") - avg_age) ** 2 * col("population_total")))
+                                  lit((col("age") - avg_age) ** 2 * col("population_total")))
 
     # Sum up the weighted squared differences and the total population
     total_weighted_squared_diff = csv_age_sq_df.select(sum("weighted_squared_diff")).collect()[0][0]
