@@ -1,6 +1,6 @@
 from pyspark import SparkConf
 
-from constants.database_constants import POSTGRES_JAR_PATH
+from src.constants.database_constants import POSTGRES_JAR_PATH
 from pyspark.sql import SparkSession
 
 conf = SparkConf()

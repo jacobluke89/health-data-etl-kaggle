@@ -1,4 +1,4 @@
-from utils.util_funcs import create_doctor_names_for_all_specialties
+from ..utils.util_funcs import create_doctor_names_for_all_specialties
 from .type_constants import (DepartmentTypes,
                              StayTypeCombinations,
                              ConditionsOrDiagnosis,

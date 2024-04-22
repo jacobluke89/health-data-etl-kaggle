@@ -1,5 +1,5 @@
 from spark_instance import spark
-from utils.read_write import read_postgres_table
+from src.utils.read_write import read_postgres_table
 
 if __name__ == '__main__':
 

@@ -6,8 +6,8 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import col, when, collect_list, struct, broadcast
 from pyspark.sql.types import StructType, StructField, StringType
 
-from constants.schemas import HealthcareDataset
-from constants.type_constants import DepartmentTypes
+from ..constants.schemas import HealthcareDataset
+from ..constants.type_constants import DepartmentTypes
 
 
 class ConditionsCreator:
