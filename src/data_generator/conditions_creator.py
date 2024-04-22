@@ -158,7 +158,7 @@ class ConditionsCreator:
 
                 conditions_probabilities.append(
                     (f"{unique_id}_{top_level_admission}_{condition_admission_type}", condition_label, prob))
-                patient_name = unique_id.split('_')[0]
+                patient_name = unique_id.split('|')[0]
                 patients_conditions[patient_name].append(
                     (unique_id, stay_types, condition_admission_type, top_level_admission, condition_label, prob))
         conditions_probabilities.sort(key=lambda x: x[1], reverse=True)
@@ -175,7 +175,7 @@ class ConditionsCreator:
         self.probability_df = self.probability_df.filter(col("probability") != 0)
         df_enum_cross = self.driver_df.crossJoin(self.enum_df)
         df_joined = df_enum_cross.join(broadcast(self.probability_df),
-                                       df_enum_cross.admission_type == self.probability_df.condition_admission_type,
+                                       on=df_enum_cross.admission_type == self.probability_df.condition_admission_type,
                                        how="inner")
 
         df_transformed = self._filter_df(df_joined)

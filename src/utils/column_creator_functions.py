@@ -145,4 +145,4 @@ def create_unique_id(name: str, dob: str) -> str:
     Returns:
         str: a unique id e.g. J_L_Smith_1988-12-12
     """
-    return f"{clean_name(name)}_{dob}"
+    return f"{clean_name(name)}|{dob}"
