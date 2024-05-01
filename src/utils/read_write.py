@@ -1,22 +1,38 @@
-from pyspark.errors import AnalysisException
-from pyspark.pandas import DataFrame
+from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.types import StructType
 
-from spark_instance import spark
-from src.constants.database_constants import properties, POSTGRES_URL
+def create_table(spark: SparkSession,
+                 database: str,
+                 table_name: str,
+                 schema: StructType =
+                 None, write_format: str = "parquet"):
+    """
+    This function creates a table if it does not exist.
+    Args:
+        spark (SparkSession):  The SparkSession
+        database (str): The database we're creating a table for
+        table_name (str): The table name
+        schema (StructType): The tables schema
+        write_format (str): The write format, default parquet format
+    """
+    table_exist = spark.catalog.tableExists(table_name, database)
+    if not table_exist:
+        df = spark.createDataFrame([], schema)
+        df.write.format(write_format).saveAsTable(f"{database}.{table_name}")
+        print(f"created table {database}.{table_name}")
+    print(f"table already exists, {database}.{table_name}")
 
-def read_postgres_table(table_name: str):
-    return spark.read.jdbc(url=POSTGRES_URL, table=table_name, properties=properties)
+def modify_table(df: DataFrame, database: str, table_name: str, mode="append", write_format: str = "parquet"):
+    """
 
-def write_postgres_table(df: DataFrame, table_name: str, mode: str = "overwrite"):
-    try:
-        # Ensure 'df' is a DataFrame and 'mode' is one of the allowed modes
-        # if not isinstance(df, DataFrame):
-        #     raise ValueError("df must be a DataFrame")
-        if mode not in ["overwrite", "append", "ignore", "error", "errorifexists"]:
-            raise ValueError("Invalid write mode specified")
+    Args:
+        df:
+        database:
+        table_name:
+        mode:
+        write_format:
 
-        df.write.jdbc(url=POSTGRES_URL, table=table_name, mode=mode, properties=properties)
-    except AnalysisException as e:
-        print(f"Could not write table: {e}")
-    except Exception as e:
-        print(f"There was an error writing table: {e}")
+    Returns:
+
+    """
+    df.write.mode(mode).format(write_format).saveAsTable(f"{database}.{table_name}")
