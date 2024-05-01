@@ -1,16 +1,14 @@
 import math
+from typing import Dict
 
-from pyspark import RDD
 from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.functions import col, lit, rand, sum
-from pyspark.sql import Row
+from pyspark.sql.functions import col, lit, sum
 
 from src.data_generator.csv_data_processor import CSVDataProcessor
-from utils.column_creator_functions import choose_blood_type, random_gender_chooser, generate_name, dob_creator, \
-    check_patient_is_pediatric, check_gender_is_female, check_patient_is_geriatric, create_unique_id
+from utils.column_creator_functions import create_rows_rdd
 
 
-def create_distributed_age_df(spark: SparkSession, file_path: str, dataset_size: int = 10000) -> DataFrame:
+def create_distributed_age_df(spark: SparkSession, file_path: str, ethnicity_dict: Dict, dataset_size: int = 10000) -> DataFrame:
     """
     This function creates a distributed age using a csv file which should contain an age distribution
     from 0 to 100+, where 100+ is represented by 100 in the csv file.  This then is used to create
@@ -22,94 +20,80 @@ def create_distributed_age_df(spark: SparkSession, file_path: str, dataset_size:
     Returns:
         DataFrame: A dataframe of age distributions.
     """
-    csv_age_file_file = CSVDataProcessor(spark, file_path)
 
-    csv_age_sq_df = csv_age_file_file.runner()
+    data_processor_age = CSVDataProcessor(spark, file_path)
+
+    csv_age_sq_df = data_processor_age.runner()
 
     normalised_df = normalise_population_density(csv_age_sq_df)
     sampled_rdd = oversample_ages(normalised_df, dataset_size)
 
-    row_rdd = create_rows_rdd(sampled_rdd)
+    row_rdd = create_rows_rdd(sampled_rdd, ethnicity_dict)
 
     sampled_df = spark.createDataFrame(row_rdd)
 
-    return sampled_df.orderBy(rand()).limit(dataset_size)
-
-
-def create_rows_rdd(sample_rdd: RDD) -> RDD:
-    """
-    This function creates each column for every given age row.
-    It computes the gender, then uses it to check if the gender is female.
-
-    Args:
-        sample_rdd: The sample sized data
-
-    Returns:
-        RDD: containing rows, with the new columns
-    """
-    return sample_rdd.map(
-        lambda age: (
-            lambda gender, name, dob: Row(
-                Age=int(age),
-                DOB=dob,
-                Blood_type=choose_blood_type(),
-                Gender=gender,
-                Name=name,
-                is_female=check_gender_is_female(gender),
-                is_pediatric=check_patient_is_pediatric(age),
-                is_geriatric=check_patient_is_geriatric(age),
-                unique_id=create_unique_id(name, dob)
-            )
-        )(random_gender_chooser("uk"), generate_name(), dob_creator(age))
-    )
+    return sampled_df.limit(dataset_size)
 
 
 def normalise_population_density(csv_age_sq_df: DataFrame) -> DataFrame:
     """
-    normalises the population density of a DataFrame.
-
-    This function calculates the sum of  total population from the 'population_total' column and creates a
-    new column 'density' by dividing each population value by sum of the total population. It then normalises
-    these density values so that their sum equals 1, creating a 'normalised_density' column.
-
+    Calculates and normalises the population density to use as sampling weights.
     Args:
-        csv_age_sq_df (DataFrame): A Spark DataFrame with at least a 'population_total' column.
+        csv_age_sq_df (DataFrame): the csv data frame contain the individual ages and populations for those ages.
     Returns:
-        DataFrame: The input DataFrame augmented with a 'normalised_density' column.
+        DataFrame: A DataFrame that includes the original columns of csv_age_sq_df, with the addition of:
+                   - 'density': The raw density value of each age group as a fraction of the total population.
+                   - 'normalized_density': The density normalised so that the sum of all densities equals 1.
+                   - 'weight': A column identical to 'normalised_density', provided for clarity and ease of use in sampling functions where a weight parameter might be expected.
+
+    Example:
+        Suppose csv_age_sq_df contains the following rows:
+            +-----+----------------+
+            | age | population_total |
+            +-----+----------------+
+            |  10 |      100       |
+            |  20 |      300       |
+            +-----+----------------+
+
+        The returned DataFrame after normalisation would look like this:
+            +-----+----------------+--------+-------------------+--------+
+            | age | population_total | density | normalised_density | weight |
+            +-----+----------------+--------+-------------------+--------+
+            |  10 |      100       |  0.25  |       0.333       |  0.333  |
+            |  20 |      300       |  0.75  |       0.667       |  0.667  |
+            +-----+----------------+--------+-------------------+--------+
+        Here, the total population is 400, making the raw densities 0.25 and 0.75. These are normalised to sum to 1.
     """
-    # Calculate the total population and add density column
     total_population = csv_age_sq_df.select(sum("population_total")).collect()[0][0]
     density_df = csv_age_sq_df.withColumn("density", col("population_total") / lit(total_population))
 
-    # normalise the density to ensure it sums to 1
+    # Normalising the density to make sure it sums to 1 (suitable for probability usage)
     total_density = density_df.select(sum("density")).collect()[0][0]
-    return density_df.withColumn("normalised_density", col("density") / lit(total_density))
+    normalized_density_df = density_df.withColumn("normalised_density", col("density") / lit(total_density))
+
+    return normalized_density_df.withColumn("weight", col("normalised_density"))
 
 
-def oversample_ages(dataframe: DataFrame, dataset_size: int, oversample_factor: float = 1.1) -> RDD:
+def oversample_ages(normalised_df: DataFrame, dataset_size: int, oversample_factor: float = 1.1) -> DataFrame:
     """
-    Over samples the 'age' field in the DataFrame based on the normalised density. This done so, we can guarantee
-    the returned rows in the  dataset, due to system rounding errors, there's possibility that if you do not
-    over sample you are like to reduce your dataset size.
-
-    This function converts a DataFrame to a Resilient Distributed Dataset (RDD) and applies a transformation that
-    replicates each 'age' entry a number of times determined by the product of the
-    'normalised_density' and an oversampling number. The oversampling number is calculated
-    as the product of the dataset size and an oversampling factor.
-
+    Performs weighted sampling on a DataFrame based on normalized density to generate the desired dataset size.
     Args:
-        dataframe (DataFrame): The Spark DataFrame containing the 'age' and 'normalised_density' columns.
-        dataset_size (int): The total size of the dataset used to calculate the oversample number.
-        oversample_factor (float): The factor used to scale the dataset size to get the oversample number (default 1.1).
-
-    Returns:
-        RDD: An RDD where each 'age' is replicated according to its 'normalised_density' times the oversample number.
+        normalised_df (DataFrame): The normalised DataFrame.
+        dataset_size (int): The size of the dataset.
+        oversample_factor (float): The multiplication factor of the over sample.
     """
     oversample_num = int(dataset_size * oversample_factor)
-    return dataframe.rdd.flatMap(
-        lambda row: [row['age']] * int(row['normalised_density'] * oversample_num)
+
+    # Simply sample with replacement based on the fraction needed
+    fraction = oversample_num / normalised_df.count()
+
+    sampled_dataframe = normalised_df.sample(
+        withReplacement=True,
+        fraction=fraction,
+        seed=42  # For reproducibility
     )
 
+    return sampled_dataframe.limit(oversample_num)
 
 def calculate_weighted_sd(df: DataFrame, avg_age: float = 40.2) -> float:
     """
@@ -117,7 +101,6 @@ def calculate_weighted_sd(df: DataFrame, avg_age: float = 40.2) -> float:
     Args:
         df (DataFrame): containing the age and total population for that given cohort.
         avg_age (float): The average age of the dataset, default is 40.2, for the United Kingdom (UK).
-        float: The weighted standard deviation
     """
     csv_age_sq_df = df.withColumn("weighted_squared_diff",
                                   lit((col("age") - avg_age) ** 2 * col("population_total")))
