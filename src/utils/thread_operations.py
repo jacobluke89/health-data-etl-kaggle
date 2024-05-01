@@ -105,7 +105,7 @@ def runner(spark: SparkSession,
     """
     df = args[0]  # Assuming the first positional argument is always the DataFrame
     total_rows = df.count()
-    rows_per_partition = 100
+    rows_per_partition = 8
     num_partitions = total_rows // rows_per_partition + (1 if total_rows % rows_per_partition else 0)
     df = df.repartition(num_partitions)
     return run_multithreaded_processing(spark, class_to_run, num_partitions, df, *args, **kwargs)
