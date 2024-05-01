@@ -1,0 +1,14 @@
+version: '3'
+services:
+  spark-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: healthcare-data-project
+    ports:
+      - "8888:8888"
+    environment:
+      SPARK_URL: ${SPARK_URL}
+      SPARK_DRIVER: ${SPARK_DRIVER}
+      SPARK_JAR_PATH: ${SPARK_JAR_PATH}
+      SPARK_WAREHOUSE: ${SPARK_WAREHOUSE}
