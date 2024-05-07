@@ -5,7 +5,7 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import col, lit, sum
 
 from src.data_generator.csv_data_processor import CSVDataProcessor
-from utils.column_creator_functions import create_rows_rdd
+from src.utils.column_creator_functions import create_rows_rdd
 
 
 def create_distributed_age_df(spark: SparkSession, file_path: str, ethnicity_dict: Dict, dataset_size: int = 10000) -> DataFrame:

@@ -126,7 +126,7 @@ class BaseDataCreator:
         # TODO add to base data tables postcode distribution calculation
         self.postcode_dict = self.adjust_postcode_weights()
         self.ethnicity_dict = self.get_normalised_data_dict("ethnicity")
-        data_processor_age = CSVDataProcessor(self._spark, self.country_data_dict["file_path"])
+        data_processor_age = CSVDataProcessor(self._spark, self.country_data_dict["age_data"]["file_path"])
         csv_age_sq_df = data_processor_age.runner()
         normalised_df = normalise_population_density(csv_age_sq_df)
         sample_rdd = oversample_ages(normalised_df, self.dataset_size)
