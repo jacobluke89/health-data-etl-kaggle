@@ -8,7 +8,11 @@ from src.data_generator.csv_data_processor import CSVDataProcessor
 from src.utils.column_creator_functions import create_rows_rdd
 
 
-def create_distributed_age_df(spark: SparkSession, file_path: str, ethnicity_dict: Dict, dataset_size: int = 10000) -> DataFrame:
+def create_distributed_age_df(spark: SparkSession,
+                              file_path: str,
+                              ethnicity_dict: Dict,
+                              postcode_dict: Dict,
+                              dataset_size: int = 10000) -> DataFrame:
     """
     This function creates a distributed age using a csv file which should contain an age distribution
     from 0 to 100+, where 100+ is represented by 100 in the csv file.  This then is used to create
@@ -16,7 +20,9 @@ def create_distributed_age_df(spark: SparkSession, file_path: str, ethnicity_dic
     Args:
         spark (SparkSession): The SparkSession
         file_path (str): path where the csv is stored, the column required is "Population Total" renamed from "Value"
-        dataset_size (int): the size of the dataset at the end of the process.
+        ethnicity_dict (Dict): The Dictionary of ethnicities distributed for the country, required when creating the rows.
+        postcode_dict (Dict): The Dictionary of postcodes distributed for the country, required when creating the rows.
+        dataset_size (int): the size of the dataset at the end of the process. default 10,000
     Returns:
         DataFrame: A dataframe of age distributions.
     """
@@ -28,7 +34,7 @@ def create_distributed_age_df(spark: SparkSession, file_path: str, ethnicity_dic
     normalised_df = normalise_population_density(csv_age_sq_df)
     sampled_rdd = oversample_ages(normalised_df, dataset_size)
 
-    row_rdd = create_rows_rdd(sampled_rdd, ethnicity_dict)
+    row_rdd = create_rows_rdd(sampled_rdd, ethnicity_dict, postcode_dict)
 
     sampled_df = spark.createDataFrame(row_rdd)
 

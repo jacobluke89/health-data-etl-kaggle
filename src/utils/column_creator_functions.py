@@ -14,18 +14,7 @@ from transliterate import translit, get_available_language_codes
 import random
 
 
-def choose_ethnicity(ethnicity_dict: Dict) -> str:
-    """
-    This function randomly chooses an ethnicity based originate csv
-    Returns:
-       str: an ethnicity
-    """
-    types = list(ethnicity_dict.keys())
-    weights = list(ethnicity_dict.values())
-    return choices(types, weights=weights, k=1)[0]
-
-
-def create_rows_rdd(sample_df: DataFrame, ethnicity_dict: Dict) -> RDD:
+def create_rows_rdd(sample_df: DataFrame, ethnicity_dict: Dict, postcode_dict: Dict, faker: Faker, country: str) -> RDD:
     """
     Converts a DataFrame to an RDD and applies a transformation to each row to enrich the data.
 
@@ -36,25 +25,34 @@ def create_rows_rdd(sample_df: DataFrame, ethnicity_dict: Dict) -> RDD:
     Args:
         sample_df (DataFrame): A Spark DataFrame containing rows of data that need to be transformed.
         Requires the 'age' col.
-
+        ethnicity_dict (Dict): The Dictionary of ethnicities distributed for the country, required when creating the rows.
+        postcode_dict (Dict): The Dictionary of postcodes distributed for the country, required when creating the rows.
+        faker (Faker): The faker class.
+        country (str): The country in question
     Returns:
         RDD: Returns an RDD where each row has been transformed using the `create_individual_row` function,
         typically including enriched demographic and healthcare data.
     """
     sample_rdd = sample_df.rdd
-    create_row_func = partial(create_individual_row, ethnicity_dict=ethnicity_dict)
+    create_row_func = partial(create_individual_row,
+                              ethnicity_dict=ethnicity_dict,
+                              postcode_dict=postcode_dict,
+                              faker=faker,
+                              country=country)
     # Use a single map transformation to process each row
     return sample_rdd.map(create_row_func)
 
 
-def create_individual_row(row: Row, ethnicity_dict: Dict) -> Row:
+def create_individual_row(row: Row, ethnicity_dict: Dict, postcode_dict: Dict, faker: Faker, country: str) -> Row:
     """
     Processes an input row from a DataFrame and enriches it with additional demographic and healthcare-related attributes.
     This function assumes the presence of an 'age' column in the input row.
     Args:
         row (Row): A Spark Row object that must contain the "age" field.
         ethnicity_dict (Dict): The Dictionary of ethnicities distributed for the country.
-
+        postcode_dict (Dict): The Dictionary of postcodes distributed for the country, required when creating the rows.
+        faker (Faker): Faker class instance.
+        country (str): The country in question.
     Returns:
         Row: A new Spark Row object with the following structure:
             - Age (int): The age of the individual.
@@ -63,6 +61,7 @@ def create_individual_row(row: Row, ethnicity_dict: Dict) -> Row:
             - Gender (str): The gender of the individual.
             - Name (str): The name of the individual.
             - Ethnicity (str): The ethnic background of the individual.
+            - Postcode (str): The postcode of the individual, sometimes known as 'zip code or area code'.
             - is_female (bool): A flag indicating whether the individual is female.
             - is_pediatric (bool): A flag indicating whether the individual is considered pediatric (under 18 years old).
             - is_geriatric (bool): A flag indicating whether the individual is considered geriatric (over 65 years old).
@@ -70,7 +69,7 @@ def create_individual_row(row: Row, ethnicity_dict: Dict) -> Row:
     """
     age = row['age']
     ethnicity = choose_ethnicity(ethnicity_dict)
-    gender = random_gender_chooser("uk")
+    gender = random_gender_chooser(country)
     name = generate_name(ethnicity)
     dob = dob_creator(age)
 
@@ -81,6 +80,7 @@ def create_individual_row(row: Row, ethnicity_dict: Dict) -> Row:
         Gender=gender,
         Name=name,
         Ethnicity=ethnicity,
+        Postcode=generate_postcode(faker, postcode_dict, country),
         is_female=check_gender_is_female(gender),
         is_pediatric=check_patient_is_pediatric(age),
         is_geriatric=check_patient_is_geriatric(age),
@@ -139,6 +139,50 @@ def transliterate_text(text, language):
         if lang_code in get_available_language_codes():
             return translit(text, reversed=True)
     return text
+
+def choose_ethnicity(ethnicity_dict: Dict) -> str:
+    """
+    This function randomly chooses an ethnicity based originate csv
+    Returns:
+       str: an ethnicity
+    """
+    types = list(ethnicity_dict.keys())
+    weights = list(ethnicity_dict.values())
+    return choices(types, weights=weights, k=1)[0]
+
+
+def generate_uk_postcode(faker: Faker, area_postcode_dict: Dict) -> str:
+    """
+    This function generates a uk postcode from the area_postcode_dict, this area_postcode_dict is distributed
+    across the uk census 2011, where a postcode is not available a quartile range of 0.1 has been selected.
+    Args:
+        faker (Faker): The faker class required to generate remaining  elements.
+        area_postcode_dict (Dict): The area postcode dict as discussed in the function explanation.
+    Returns:
+        str: A uk postcode.
+    """
+    area = list(area_postcode_dict.keys())
+    weights = list(area_postcode_dict.values())
+    area = choices(area, weights=weights, k=1)[0]
+    district = str(faker.random_digit_not_null())
+    sector = str(faker.random_digit())
+    unit = ''.join(faker.random_letters(length=2)).upper()
+
+    return f"{area}{district} {sector}{unit}"
+
+def generate_postcode(faker: Faker, postcode_dict: Dict, country: str) -> str|None:
+    """
+    Args:
+        faker (Faker): The faker class required to generate elements of the post code, zip code etc.
+        postcode_dict (Dict): The distribution of postcode in the countries population
+        country (str): The country in consideration
+    Returns:
+        str|None: The postcode of the country in that format or None, where the country is not created.
+    """
+    if country == "uk":
+        return generate_uk_postcode(faker, postcode_dict)
+    else:
+        return None
 
 
 def handle_name(fake: Faker, transform=None):

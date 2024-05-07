@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 import numpy as np
+from faker import Faker
 from pyspark.sql import DataFrame, SparkSession
 
 from utils.statistcs.statistical_functions import normalise_population_density, oversample_ages, create_rows_rdd
@@ -130,6 +131,6 @@ class BaseDataCreator:
         csv_age_sq_df = data_processor_age.runner()
         normalised_df = normalise_population_density(csv_age_sq_df)
         sample_rdd = oversample_ages(normalised_df, self.dataset_size)
-        row_rdd = create_rows_rdd(sample_rdd, self.ethnicity_dict)
+        row_rdd = create_rows_rdd(sample_rdd, self.ethnicity_dict, self.postcode_dict, Faker(), self.country)
         sample_df = self._spark.createDataFrame(row_rdd)
         return sample_df.limit(self.dataset_size)
